@@ -3,7 +3,7 @@ kelp_additional_kernels
 
  [**KeLP**][kelp-site] is the Kernel-based Learning Platform (Filice '15) developed in the [Semantic Analytics Group][sag-site] of the [University of Roma Tor Vergata][uniroma2-site]. 
 
-This project contains several ***kernel functions*** algorithms extending the set of kernels made available in the **kelp-core** project. Moreover, this project implements the specific **representations** required to enable the application of such kernels.
+This project contains several ***kernel functions*** that extend the set of kernels made available in the **kelp-core** project. Moreover, this project implements the specific **representations** required to enable the application of such kernels.
 
 In this project the following kernel functions are considered: 
 
@@ -11,8 +11,9 @@ In this project the following kernel functions are considered:
 * Tree kernels
 * Graphs kernels
 
-For examples about the usage of the following kernels, please refer to the project **kelp-full**.
+Examples about the usage of the following kernels, please refer to the project **kelp-full**.
 
+KELP is released as open source software under the Apache 2.0 license and the source code is available on [Github][github].
 
 
 Sequence Kernels
@@ -42,7 +43,68 @@ Currently, the following kernels are implemented:
 
 * **WLSubtreeMapper**: it extracts a _SparseVector_ from a given graphs. Such _SparseVector_ corresponds to the explicit feature space projection of the WLSubtree Kernel for graphs (Shervashidze '11). The features correspond to the trees resulting from breadth-first visits of depth up to _h_. It is implemented as a _Manipulator_ that enriches an Example with these vectorial representation allowing to exploit them with kernel methods or with linear learning algorithms. 
 
-============
+
+=============
+
+##Including KeLP in your project
+
+If you want to include this set of kernel functions, you can  easily include it in your [Maven][maven-site] project adding the following repositories to your pom file:
+
+```
+<repositories>
+	<repository>
+			<id>kelp_repo_snap</id>
+			<name>KeLP Snapshots repository</name>
+			<releases>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<url>http://sag.art.uniroma2.it:8081/artifactory/kelp-snapshot/</url>
+		</repository>
+		<repository>
+			<id>kelp_repo_release</id>
+			<name>KeLP Stable repository</name>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<url>http://sag.art.uniroma2.it:8081/artifactory/kelp-release/</url>
+		</repository>
+	</repositories>
+```
+
+Then, the [Maven][maven-site] dependency for the whole **KeLP** package:
+
+```
+<dependency>
+    <groupId>it.uniroma2.sag.kelp</groupId>
+    <artifactId>kelp-additional-kernels</artifactId>
+    <version>2.0.0</version>
+</dependency>
+```
+
+
+Alternatively, thanks to the modularity of **KeLP**, you can include one of the following modules:
+
+* [kelp-core](https://github.com/SAG-KeLP/kelp-core): it contains the core interfaces and classes for algorithms, kernels and representations. It contains also the base set of classifiers, regressors and clustering algorithms. It serves as the main module to develop new kernel functions or new algorithms;
+
+* [kelp-additional-algorithms](https://github.com/SAG-KeLP/kelp-additional-algorithms): it contains additional learning algorithms, such as the **KeLP** Java implementation of Liblinear or Online Learning algorithms, such as the Passive Aggressive;
+
+* [kelp-full](https://github.com/SAG-KeLP/kelp-full): it is a complete package of KeLP that contains the entire set of existing modules, i.e. additional  kernel functions and algorithms.
+
+=============
 
 References
 ----------
@@ -74,10 +136,13 @@ Usefull Links
 
 Kelp site: [http://sag.art.uniroma2.it/demo-software/kelp/][kelp-site]
 
-SAG site: [http://sag.art.uniroma2.it] [kelp-site]
+SAG site: [http://sag.art.uniroma2.it] [sag-site]
 
+Source code hosted at GitHub: [https://github.com/SAG-KeLP][github]
 
 [sag-site]: http://sag.art.uniroma2.it "SAG site"
 [uniroma2-site]: http://www.uniroma2.it "University of Roma Tor Vergata"
 [kelp-site]: http://sag.art.uniroma2.it/demo-software/kelp/
+[maven-site]: http://maven.apache.org "Apache Maven"
+[github]: https://github.com/SAG-KeLP
 
