@@ -83,7 +83,7 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 	@JsonIgnore
 	private DeltaMatrix deltaMatrix = StaticDeltaMatrix.getInstance();
 
-	private static final int MAX_CHILDREN = 100;
+	private static final int MAX_CHILDREN = 200;
 
 	private int recursion_id = 0;
 
