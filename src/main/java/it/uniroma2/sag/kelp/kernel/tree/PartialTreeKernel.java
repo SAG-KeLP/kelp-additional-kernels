@@ -31,11 +31,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 /**
  * Partial Tree Kernel implementation.
  * 
- * A Partial Tree Kernel is a convolution kernel that evaluates the tree fragments 
- * shared between two trees. The considered fragments are are partial trees, i.e. a node and its
- * partial descendancy (the descendancy can be incomplete, i.e. a partial production is allowed).
- * The kernel function is defined
- * as: </br>
+ * A Partial Tree Kernel is a convolution kernel that evaluates the tree
+ * fragments shared between two trees. The considered fragments are are partial
+ * trees, i.e. a node and its partial descendancy (the descendancy can be
+ * incomplete, i.e. a partial production is allowed). The kernel function is
+ * defined as: </br>
  * 
  * \(K(T_1,T_2) = \sum_{n_1 \in N_{T_1}} \sum_{n_2 \in N_{T_2}}
  * \Delta(n_1,n_2)\)
@@ -55,6 +55,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  */
 @JsonTypeName("ptk")
 public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
+
+	private static final int MAX_CHILDREN = 200;
 
 	/**
 	 * Vertical Decay Factor
@@ -78,12 +80,16 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 	private float terminalFactor = 1;
 
 	/**
+	 * Maximum length of common subsequences considered in the recursion. It
+	 * reflects the maximum branching factor allowed to the tree fragments.
+	 */
+	private int maxSubseqLeng = MAX_CHILDREN;
+
+	/**
 	 * The delta matrix, used to cache the delta functions applied to subtrees
 	 */
 	@JsonIgnore
 	private DeltaMatrix deltaMatrix = StaticDeltaMatrix.getInstance();
-
-	private static final int MAX_CHILDREN = 200;
 
 	private int recursion_id = 0;
 
@@ -127,7 +133,7 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 		this.lambda2 = LAMBDA * LAMBDA;
 		this.mu = MU;
 		this.terminalFactor = terminalFactor;
-		//this.deltaMatrix = new StaticDeltaMatrix();
+		// this.deltaMatrix = new StaticDeltaMatrix();
 	}
 
 	/**
@@ -215,7 +221,7 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 		 * call the kernel at the same time, a specific DeltaMatrix for each
 		 * thread should be initialized
 		 */
-		
+
 		// Initialize the delta function cache
 		deltaMatrix.clear();
 		ArrayList<TreeNodePairs> pairs = determineSubList(a, b);
@@ -351,8 +357,8 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 		if (m < n)
 			p = m;
 
-		if (p > MAX_CHILDREN)
-			p = MAX_CHILDREN;
+		if (p > maxSubseqLeng)
+			p = maxSubseqLeng;
 
 		kernel_mat[0] = 0;
 		for (i = 1; i <= n; i++) {
@@ -398,6 +404,25 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 		recursion_id--;
 
 		return K;
+	}
+
+	/**
+	 * @return The maximum length of common subsequences considered in the
+	 *         recursion. It reflects the maximum branching factor allowed to
+	 *         the tree fragments.
+	 */
+	public int getMaxSubseqLeng() {
+		return maxSubseqLeng;
+	}
+
+	/**
+	 * @param maxSubseqLeng
+	 *            The maximum length of common subsequences considered in the
+	 *            recursion. It reflects the maximum branching factor allowed to
+	 *            the tree fragments.
+	 */
+	public void setMaxSubseqLeng(int maxSubseqLeng) {
+		this.maxSubseqLeng = maxSubseqLeng;
 	}
 
 }
