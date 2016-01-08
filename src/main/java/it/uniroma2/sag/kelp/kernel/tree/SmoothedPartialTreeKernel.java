@@ -75,6 +75,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  */
 @JsonTypeName("sptk")
 public class SmoothedPartialTreeKernel extends DirectKernel<TreeRepresentation> {
+	
+	private static final int MAX_CHILDREN = 200;
+	
 	/**
 	 * Vertical Decay Factor
 	 */
@@ -109,20 +112,22 @@ public class SmoothedPartialTreeKernel extends DirectKernel<TreeRepresentation> 
 	 * The delta matrix, used to cache the delta functions applied to subtrees
 	 */
 	private DeltaMatrix deltaMatrix = StaticDeltaMatrix.getInstance();
+	
+	/**
+	 * Maximum length of common subsequences considered in the recursion. It
+	 * reflects the maximum branching factor allowed to the tree fragments.
+	 */
+	private int maxSubseqLeng = MAX_CHILDREN;
 
 	private int recursion_id = 0;
 
 	private static final int NO_RESPONSE = -1;
 
 	private static final int MAX_RECURSION = 40;
-	private static final int MAX_CHILDREN = 5;
 
-	private static final int MAX_NUMBER_OF_CHILDREN_PT = 100;
-
-	private final float[][][] DPS_buffer = new float[MAX_RECURSION][MAX_NUMBER_OF_CHILDREN_PT][MAX_NUMBER_OF_CHILDREN_PT];
-	private final float[][][] DP_buffer = new float[MAX_RECURSION][MAX_NUMBER_OF_CHILDREN_PT][MAX_NUMBER_OF_CHILDREN_PT];
-	private final float[][] kernel_mat_buffer = new float[MAX_RECURSION][MAX_NUMBER_OF_CHILDREN_PT
-			* MAX_NUMBER_OF_CHILDREN_PT];
+	private float[][] kernel_mat_buffer = new float[MAX_RECURSION][MAX_CHILDREN];
+	private float[][][] DPS_buffer = new float[MAX_RECURSION][MAX_CHILDREN + 1][MAX_CHILDREN + 1];
+	private float[][][] DP_buffer = new float[MAX_RECURSION][MAX_CHILDREN + 1][MAX_CHILDREN + 1];
 
 	public SmoothedPartialTreeKernel() {
 		
@@ -351,8 +356,8 @@ public class SmoothedPartialTreeKernel extends DirectKernel<TreeRepresentation> 
 		if (m < n)
 			p = m;
 
-		if (p > MAX_CHILDREN)
-			p = MAX_CHILDREN;
+		if (p > maxSubseqLeng)
+			p = maxSubseqLeng;
 
 		float temp;
 		kernel_mat[0] = 0;
@@ -431,5 +436,24 @@ public class SmoothedPartialTreeKernel extends DirectKernel<TreeRepresentation> 
 				return sum;
 			}
 		}
+	}
+	
+	/**
+	 * @return The maximum length of common subsequences considered in the
+	 *         recursion. It reflects the maximum branching factor allowed to
+	 *         the tree fragments.
+	 */
+	public int getMaxSubseqLeng() {
+		return maxSubseqLeng;
+	}
+
+	/**
+	 * @param maxSubseqLeng
+	 *            The maximum length of common subsequences considered in the
+	 *            recursion. It reflects the maximum branching factor allowed to
+	 *            the tree fragments.
+	 */
+	public void setMaxSubseqLeng(int maxSubseqLeng) {
+		this.maxSubseqLeng = maxSubseqLeng;
 	}
 }
