@@ -15,20 +15,21 @@
 
 package it.uniroma2.sag.kelp.data.representation.structure.similarity;
 
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.databind.DatabindContext;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
-import com.fasterxml.jackson.databind.type.TypeFactory;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * It is a class implementing <code>TypeIdResolver</code> which will be used by
@@ -101,6 +102,10 @@ public class StructureElementSimilarityTypeResolver implements TypeIdResolver {
 		}
 		throw new IllegalStateException("cannot find mapping for '" + arg0
 				+ "'");
+	}
+
+	public JavaType typeFromId(DatabindContext var1, String arg0) {
+		return typeFromId(arg0);
 	}
 
 	public String idFromValueAndType(Object arg0, Class<?> arg1) {
