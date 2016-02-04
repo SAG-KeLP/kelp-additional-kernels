@@ -105,6 +105,24 @@ Alternatively, thanks to the modularity of **KeLP**, you can include one of the 
 * [kelp-full](https://github.com/SAG-KeLP/kelp-full): it is a complete package of KeLP that contains the entire set of existing modules, i.e. additional  kernel functions and algorithms.
 
 =============
+How to cite KeLP
+----------------
+If you find KeLP usefull in your researches, please cite the following paper:
+
+```
+@InProceedings{filice-EtAl:2015:ACL-IJCNLP-2015-System-Demonstrations,
+	author = {Filice, Simone and Castellucci, Giuseppe and Croce, Danilo and Basili, Roberto},
+	title = {KeLP: a Kernel-based Learning Platform for Natural Language Processing},
+	booktitle = {Proceedings of ACL-IJCNLP 2015 System Demonstrations},
+	month = {July},
+	year = {2015},
+	address = {Beijing, China},
+	publisher = {Association for Computational Linguistics and The Asian Federation of Natural Language Processing},
+	pages = {19--24},
+	url = {http://www.aclweb.org/anthology/P15-4004}
+}
+```
+=============
 
 References
 ----------
