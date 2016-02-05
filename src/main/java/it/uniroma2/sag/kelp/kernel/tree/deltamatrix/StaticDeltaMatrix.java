@@ -1,15 +1,21 @@
 package it.uniroma2.sag.kelp.kernel.tree.deltamatrix;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StaticDeltaMatrix implements DeltaMatrix {
 
-	private final static int DEFAULTSIZE = 400;
+	private Logger logger = LoggerFactory.getLogger(StaticDeltaMatrix.class);
+
+	private static final int DELTAINCREASE = 400;
+
+	private final static int DEFAULTSIZE = 5;
 
 	/**
 	 * Sparse implementation of a matrix
 	 */
 	private float[][] matrix = new float[DEFAULTSIZE][DEFAULTSIZE];
-	
+
 	private static final StaticDeltaMatrix instance = new StaticDeltaMatrix(DEFAULTSIZE);
 
 	public StaticDeltaMatrix() {
@@ -31,7 +37,28 @@ public class StaticDeltaMatrix implements DeltaMatrix {
 	 *            value to insert in delta_matrix[i][j]
 	 */
 	public void add(int i, int j, float v) {
-		this.matrix[i][j] = v;
+		do {
+			try {
+				this.matrix[i][j] = v;
+				return;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				int maxElementSize = this.matrix.length;
+				logger.warn("Increasing delta matrix size from " + maxElementSize + " to "
+						+ (maxElementSize + DELTAINCREASE));
+				matrix = resizeArray(matrix, maxElementSize + DELTAINCREASE);
+			}
+		} while (true);
+	}
+
+	private static float[][] resizeArray(float[][] oldArray, int newSize) {
+		int oldSize = oldArray.length;
+		float[][] newArray = new float[newSize][newSize];
+		for (int i = 0; i < oldSize; i++) {
+			for (int j = 0; j < oldSize; j++) {
+				newArray[i][j] = oldArray[i][j];
+			}
+		}
+		return newArray;
 	}
 
 	/**
@@ -53,8 +80,8 @@ public class StaticDeltaMatrix implements DeltaMatrix {
 	public void clear() {
 
 	}
-	
-	public static StaticDeltaMatrix getInstance(){
+
+	public static StaticDeltaMatrix getInstance() {
 		return instance;
 	}
 
