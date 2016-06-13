@@ -293,6 +293,23 @@ public class TreeNode implements Serializable {
 	}
 	
 	/**
+	 * Returns the branching factor of the tree rooted by this node
+	 * 
+	 * @return the branching factor 
+	 */
+	public int getBranchingFactor() {
+
+		int branchingFactor = children.size();
+		for (TreeNode child : children) {
+			int childBranchingFactor = child.getBranchingFactor();
+			if (childBranchingFactor > branchingFactor) {
+				branchingFactor = childBranchingFactor;
+			}
+		}
+		return branchingFactor;
+	}
+	
+	/**
 	 * Returns whether this node has at least a child that is a leaf (i.e. the child is terminal)
 	 * 
 	 * @return whether this node is preterminal

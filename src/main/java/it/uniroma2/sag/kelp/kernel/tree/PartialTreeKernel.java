@@ -25,6 +25,9 @@ import it.uniroma2.sag.kelp.kernel.tree.deltamatrix.StaticDeltaMatrix;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -56,7 +59,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("ptk")
 public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 
-	private static final int MAX_CHILDREN = 200;
+	private Logger logger = LoggerFactory.getLogger(PartialTreeKernel.class);
+	
+	private int MAX_CHILDREN = 50;
+	private int MAX_RECURSION = 20;
 
 	/**
 	 * Vertical Decay Factor
@@ -83,8 +89,10 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 	 * Maximum length of common subsequences considered in the recursion. It
 	 * reflects the maximum branching factor allowed to the tree fragments.
 	 */
-	private int maxSubseqLeng = MAX_CHILDREN;
+	private int maxSubseqLeng = Integer.MAX_VALUE;
 
+	//TODO 
+	//REMOVE THE DYNAMIC DELTA MATRIX
 	/**
 	 * The delta matrix, used to cache the delta functions applied to subtrees
 	 */
@@ -92,8 +100,6 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 	private DeltaMatrix deltaMatrix = StaticDeltaMatrix.getInstance();
 
 	private int recursion_id = 0;
-
-	private static final int MAX_RECURSION = 40;
 
 	private float[][] kernel_mat_buffer = new float[MAX_RECURSION][MAX_CHILDREN];
 	private float[][][] DPS_buffer = new float[MAX_RECURSION][MAX_CHILDREN + 1][MAX_CHILDREN + 1];
@@ -224,6 +230,29 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 
 		// Initialize the delta function cache
 		deltaMatrix.clear();
+		
+		/*
+		 * Check the size of caching matrices
+		 */
+		int maxBranchingFactor = Math.max(a.getBranchingFactor(), b.getBranchingFactor());
+		int maxHeight = Math.max(a.getHeight(), b.getHeight());
+
+		if (kernel_mat_buffer[0].length < maxBranchingFactor + 1 || DP_buffer.length < maxHeight) {
+			if (maxBranchingFactor >= MAX_CHILDREN) {
+				MAX_CHILDREN = maxBranchingFactor + 1;
+			}
+			if (maxHeight > MAX_RECURSION)
+				MAX_RECURSION = maxHeight;
+			logger.warn("Increasing the size of cache matrices to host trees with height=" + MAX_RECURSION
+					+ " and maxBranchingFactor=" + MAX_CHILDREN + "");
+			kernel_mat_buffer = new float[MAX_CHILDREN][MAX_CHILDREN];
+			DPS_buffer = new float[MAX_RECURSION][MAX_CHILDREN][MAX_CHILDREN];
+			DP_buffer = new float[MAX_RECURSION][MAX_CHILDREN][MAX_CHILDREN];
+		}
+		/*
+		 * End of the check
+		 */
+		
 		ArrayList<TreeNodePairs> pairs = determineSubList(a, b);
 
 		float k = 0;

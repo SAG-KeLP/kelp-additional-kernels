@@ -68,6 +68,16 @@ public class TreeRepresentation implements Representation {
 	 * string. Used by several Tree Kernel functions.
 	 */
 	protected List<TreeNode> orderedNodeSetByProductionIgnoringLeaves = null;
+	
+	/**
+	 * The height of the tree
+	 */
+	private Integer height;
+	
+	/**
+	 * The branching factor of the tree
+	 */
+	private Integer branchingFactor;
 
 	/**
 	 * Compare tree nodes by Label
@@ -130,9 +140,11 @@ public class TreeRepresentation implements Representation {
 		return false;
 	}
 
-	public void updateOrderedNodeLists(){
+	public void updateOrderedNodeLists() {
 		this.orderedNodeSetByLabel = null;
 		this.orderedNodeSetByProduction = null;
+		this.height = null;
+		this.branchingFactor = null;
 	}
 	
 	/**
@@ -306,4 +318,29 @@ public class TreeRepresentation implements Representation {
 		return true;
 	}
 
+	
+	/**
+	 * @return The number of nodes in the tree
+	 */
+	public int getNumberOfNodes() {
+		return getOrderedNodeSetByLabel().size();
+	}
+
+	/**
+	 * @return The height of the tree
+	 */
+	public int getHeight() {
+		if (this.height == null)
+			this.height = root.getHeight();
+		return this.height;
+	}
+
+	/**
+	 * @return The branching factor of the tree
+	 */
+	public int getBranchingFactor() {
+		if (this.branchingFactor == null)
+			this.branchingFactor = root.getBranchingFactor();
+		return this.branchingFactor;
+	}
 }

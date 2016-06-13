@@ -7,9 +7,7 @@ public class StaticDeltaMatrix implements DeltaMatrix {
 
 	private Logger logger = LoggerFactory.getLogger(StaticDeltaMatrix.class);
 
-	private static final int DELTAINCREASE = 100;
-
-	private final static int DEFAULTSIZE = 200;
+	private final static int DEFAULTSIZE = 100;
 
 	/**
 	 * Sparse implementation of a matrix
@@ -43,9 +41,10 @@ public class StaticDeltaMatrix implements DeltaMatrix {
 				return;
 			} catch (ArrayIndexOutOfBoundsException e) {
 				int maxElementSize = this.matrix.length;
+				int newSize = Math.max(i, j) + 1;
 				logger.warn("Increasing delta matrix size from " + maxElementSize + " to "
-						+ (maxElementSize + DELTAINCREASE));
-				matrix = resizeArray(matrix, maxElementSize + DELTAINCREASE);
+						+ newSize);
+				matrix = resizeArray(matrix, newSize);
 			}
 		} while (true);
 	}
