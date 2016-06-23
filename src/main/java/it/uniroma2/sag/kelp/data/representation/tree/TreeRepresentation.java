@@ -322,6 +322,7 @@ public class TreeRepresentation implements Representation {
 	/**
 	 * @return The number of nodes in the tree
 	 */
+	@JsonIgnore
 	public int getNumberOfNodes() {
 		return getOrderedNodeSetByLabel().size();
 	}
@@ -329,6 +330,7 @@ public class TreeRepresentation implements Representation {
 	/**
 	 * @return The height of the tree
 	 */
+	@JsonIgnore
 	public int getHeight() {
 		if (this.height == null)
 			this.height = root.getHeight();
@@ -338,6 +340,7 @@ public class TreeRepresentation implements Representation {
 	/**
 	 * @return The branching factor of the tree
 	 */
+	@JsonIgnore
 	public int getBranchingFactor() {
 		if (this.branchingFactor == null)
 			this.branchingFactor = root.getBranchingFactor();
