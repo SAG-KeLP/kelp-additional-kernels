@@ -42,7 +42,7 @@ import it.uniroma2.sag.kelp.data.representation.vector.SparseVector;
  * [1] N. Shervashidze, “Weisfeiler-lehman graph kernels,” JMLR, vol. 12, pp. 2539–2561, 2011.
  * 
  * @author Giovanni Da San Martino
- *
+ * 
  */
 public class WLSubtreeMapper implements Manipulator{
 
