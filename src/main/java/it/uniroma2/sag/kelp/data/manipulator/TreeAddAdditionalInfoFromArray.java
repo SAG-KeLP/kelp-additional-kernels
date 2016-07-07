@@ -96,7 +96,7 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 		String msg = "Created Manpulator which adds an additional field to tree "
 				+ "nodes. The object is instantiated as follows:"  + System.lineSeparator()
 				+ "Tree Selector object: " + treeSelector.describe() + System.lineSeparator();
-		msg += "The nodes which the new field will be added are:" 
+		msg += "The nodes for which the new field will be added are:" 
 				+ treeNodeSelector.describe() + " , i.e. the root of the tree" + System.lineSeparator();
 		msg += "new field name: " + infoFieldName + System.lineSeparator();
 		msg += "Example of values from the first example: " + datasetNodeInfo.get(0).toString() + System.lineSeparator();
@@ -106,8 +106,10 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 	@Override
 	public void manipulate(Example example) {
 		TreeRepresentation tree = treeSelector.GetTreeRepresentation(example);
-		manipulateTree(tree, datasetNodeInfo.get(exampleIndex));
-		exampleIndex += 1;
+		if(tree != null) {
+			manipulateTree(tree, datasetNodeInfo.get(exampleIndex));
+			exampleIndex += 1;
+		}
 	}
 
 	private void manipulateTree(TreeRepresentation tree, List<Double> nodeInfo) {
