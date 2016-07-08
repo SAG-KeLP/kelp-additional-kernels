@@ -142,34 +142,34 @@ public class TreeNodePruner implements Manipulator {
 	 * @return a String with the description
 	 */
 	public String describe() {
-		String msg = "Tree Node Pruner object instantiated as follows:" + System.lineSeparator()
-				+ "Tree Selector object: " + treeSelector.describe() + System.lineSeparator();
+		String msg = "Tree Node Pruner object instantiated as follows:" + System.getProperty("line.separator")
+				+ "Tree Selector object: " + treeSelector.describe() + System.getProperty("line.separator");
 		if (visit == visitType.POST_ORDER) {
-			msg += "A post order visit will be performed" + System.lineSeparator();
+			msg += "A post order visit will be performed" + System.getProperty("line.separator");
 			if(internalNodePrunerChecker!=null) {
 				msg += "Pruning Strategy for non-leaf nodes: " 
-						+ internalNodePrunerChecker.describe() + System.lineSeparator();
+						+ internalNodePrunerChecker.describe() + System.getProperty("line.separator");
 				msg += "Pruning Strategy for leaf nodes: " 
-						+ nodePrunerChecker.describe() + System.lineSeparator();
+						+ nodePrunerChecker.describe() + System.getProperty("line.separator");
 			}
 			msg += "General Pruning Strategy for nodes: " 
-					+ nodePrunerChecker.describe() + System.lineSeparator();
+					+ nodePrunerChecker.describe() + System.getProperty("line.separator");
 		}
 		if (visit == visitType.PRE_ORDER) {
-			msg += "A pre order visit will be performed" + System.lineSeparator();
+			msg += "A pre order visit will be performed" + System.getProperty("line.separator");
 			msg += "Pruning strategy: " + nodePrunerForPreOrderVisit.describe() 
-					+ System.lineSeparator();
+					+ System.getProperty("line.separator");
 		}
 		if(nodeSelector != null) {
 			msg += "Node Selected as starting points of the tree visit: " + 
-					nodeSelector.describe() + System.lineSeparator();
+					nodeSelector.describe() + System.getProperty("line.separator");
 		}else {
 			msg += "Node Selected as starting point of the tree visit: "
-					+ "the root of the tree" + System.lineSeparator();
+					+ "the root of the tree" + System.getProperty("line.separator");
 		}
 		msg += "The Maximum depth of the recursive visits is " + 
 				(maxDepthVisits==UNLIMITED_RECURSION?"unlimited": maxDepthVisits);
-		return msg + System.lineSeparator();
+		return msg + System.getProperty("line.separator");
 	}
 	
 	@Override
