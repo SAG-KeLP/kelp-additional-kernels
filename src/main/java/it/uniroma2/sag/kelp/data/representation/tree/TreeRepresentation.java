@@ -140,11 +140,19 @@ public class TreeRepresentation implements Representation {
 		return false;
 	}
 
-	public void updateOrderedNodeLists() {
+	/**
+	 * Updates the tree. This method must be invoked if the tree has been modified:
+	 * i.e., some nodes have been removed or added, or if the content of a node (the label)
+	 * has been modified
+	 */
+	public void updateTree() {
 		this.orderedNodeSetByLabel = null;
 		this.orderedNodeSetByProduction = null;
 		this.height = null;
 		this.branchingFactor = null;
+		for(TreeNode node: this.getAllNodes()){
+			node.updateProduction();
+		}
 	}
 	
 	/**

@@ -172,8 +172,8 @@ public class TreePairRelTagger implements Manipulator{
 		for(TreeNode node : nodesToMarkB){
 			markNode(node);
 		}
-		treeA.updateOrderedNodeLists();
-		treeB.updateOrderedNodeLists();
+		treeA.updateTree();
+		treeB.updateTree();
 	}
 
 	private List<TreeNode> getNodesOfInterest(TreeRepresentation tree){

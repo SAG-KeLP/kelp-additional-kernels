@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 Simone Filice and Giuseppe Castellucci and Danilo Croce and Roberto Basili
+ * Copyright 2014-2016 Simone Filice and Giuseppe Castellucci and Danilo Croce and Roberto Basili
  * and Giovanni Da San Martino and Alessandro Moschitti
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -184,7 +184,7 @@ public class TreeNodePruner implements Manipulator {
 					manipulateNodes(node, maxDepthVisits);
 				}
 			}
-			tree.updateOrderedNodeLists();
+			tree.updateTree();
 		}
 	}
 
