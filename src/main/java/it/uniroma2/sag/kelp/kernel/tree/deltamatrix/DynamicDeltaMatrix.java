@@ -3,6 +3,13 @@ package it.uniroma2.sag.kelp.kernel.tree.deltamatrix;
 import gnu.trove.map.hash.TIntFloatHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
+/**
+ * This class should not be used, as in the new KeLP releases the code as been optimized 
+ * to use StaticDeltaMatrix whose proper dimension is dynamically inferred during the execution
+ * Using DynamicDeltaMatrix is inefficient 
+ * 
+ */
+@Deprecated
 public class DynamicDeltaMatrix implements DeltaMatrix {
 
 

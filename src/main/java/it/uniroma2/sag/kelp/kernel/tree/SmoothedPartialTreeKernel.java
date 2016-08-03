@@ -307,6 +307,13 @@ public class SmoothedPartialTreeKernel extends DirectKernel<TreeRepresentation> 
 		return (float) evaluateKernelNotNormalize(repA, repB);
 	}
 
+	/**
+	 * Sets the delta matrix. This method should not be used, as the new KeLP versions
+	 * are optimized to automatically set the proper delta matrix
+	 * 
+	 * @param deltaMatrix
+	 */
+	@Deprecated
 	@JsonIgnore
 	public void setDeltaMatrix(DeltaMatrix deltaMatrix) {
 		this.deltaMatrix = deltaMatrix;

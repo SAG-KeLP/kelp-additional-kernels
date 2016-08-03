@@ -141,11 +141,12 @@ public class SubSetTreeKernel extends DirectKernel<TreeRepresentation>{
 	}
 
 	/**
-	 * Sets the DeltaMatrix used to store the evaluated delta functions 
-	 * of this tree kernel 
+	 * Sets the delta matrix. This method should not be used, as the new KeLP versions
+	 * are optimized to automatically set the proper delta matrix
 	 * 
-	 * @param the the DeltaMatrix to set
+	 * @param deltaMatrix to set
 	 */
+	@Deprecated
 	@JsonIgnore
 	public void setDeltaMatrix(DeltaMatrix deltaMatrix) {
 		this.deltaMatrix = deltaMatrix;

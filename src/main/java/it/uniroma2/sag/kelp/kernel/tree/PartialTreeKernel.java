@@ -338,6 +338,14 @@ public class PartialTreeKernel extends DirectKernel<TreeRepresentation> {
 
 	}
 
+
+	/**
+	 * Sets the delta matrix. This method should not be used, as the new KeLP versions
+	 * are optimized to automatically set the proper delta matrix
+	 * 
+	 * @param deltaMatrix
+	 */
+	@Deprecated
 	@JsonIgnore
 	public void setDeltaMatrix(DeltaMatrix deltaMatrix) {
 		this.deltaMatrix = deltaMatrix;
