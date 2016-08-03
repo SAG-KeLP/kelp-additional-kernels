@@ -115,7 +115,7 @@ public class DirectedGraphRepresentation implements Representation {
 	 * @param Id
 	 * @return the graphNode
 	 */
-	protected GraphNode getNodeFromID(Integer Id) {
+	public GraphNode getNodeFromID(Integer Id) {
 		
 		Integer arrayPosition = this.nodesIdToGraphObjs.get(Id);
 		if (arrayPosition == -1) {
@@ -306,6 +306,6 @@ public class DirectedGraphRepresentation implements Representation {
 //			return (long)secondNodeIndex << 32 | firstNodeIndex & 0xFFFFFFFFL;
 //		}
 //	}
-	
+
 }
 
