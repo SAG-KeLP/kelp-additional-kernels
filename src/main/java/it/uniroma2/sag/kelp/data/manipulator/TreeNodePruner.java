@@ -23,7 +23,8 @@ import it.uniroma2.sag.kelp.data.representation.tree.TreeRepresentation;
 import it.uniroma2.sag.kelp.data.representation.tree.node.TreeNode;
 import it.uniroma2.sag.kelp.data.representation.tree.node.nodePruner.NodePruner;
 import it.uniroma2.sag.kelp.data.representation.tree.node.nodePruner.NodeToBePrunedCheckerAbstractClass;
-import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectTreeRepresentationInterface;
+import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectRepresentationFromExample;
+import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectRepresentationFromExample.representationSelectorInExample;
 import it.uniroma2.sag.kelp.data.representation.tree.utils.TreeNodeSelector;
 
 /**
@@ -32,17 +33,19 @@ import it.uniroma2.sag.kelp.data.representation.tree.utils.TreeNodeSelector;
  * checks whether it should be pruned.  
  * The behavior of the class depends on the classes passed as parameters to the 
  * constructor. However, a general schema is as follows:
- * 
- * 1) a tree is selected from the Example (depends on <code>treeSelectorObj</code>)  
- * 2) one or few nodes of the tree are selected, the visit of the tree will
+ *   
+ * 1) one or few nodes of the tree are selected, the visit of the tree will
  * start from such nodes (depends on <code>nodeSelectorObj</code>) 
- * 3) the visit can be pre-order or post-order and a limit to the number of
+ * 2) the visit can be pre-order or post-order and a limit to the number of
  * recursive calls can be set (depends on <code>visit</code> and 
  * <code>maxDepthVisitsWhilePruning</code>
- * 4) a class for checking whether a node has to be pruned (<code>nodePrunerObj</code>); 
+ * 3) a class for checking whether a node has to be pruned (<code>nodePrunerObj</code>); 
  * optionally a second class for pruning non leaf nodes only can be provided
  * (<code>internalNodePrunerObj</code>)  
  * 
+ * When dealing with ExamplePair objects, it is possible to apply a pruning 
+ * strategy to the trees of one pair Example of the pair only (in this case class 
+ * <code>treeSelectorObj</code> need to be set up properly)
  *  
  * @author Giovanni Da San Martino
  *
@@ -53,7 +56,7 @@ public class TreeNodePruner implements Manipulator {
 	/**
 	 * A class for selecting a tree from an Example
 	 */
-	private SelectTreeRepresentationInterface treeSelector;
+	private SelectRepresentationFromExample treeSelector;
 	/**
 	 * A class for determining whether a node should be pruned. The policy 
 	 * returns a boolean, the node is pruned by the function performing the 
@@ -91,51 +94,94 @@ public class TreeNodePruner implements Manipulator {
 		POST_ORDER, PRE_ORDER
 	}
 	private visitType visit;
-	
+		
 	/**
 	 * Create a tree pruner which performs a post-order traversal of the tree.  
 	 * 
-	 * @param treeSelectorObj
-	 * @param nodePrunerObj
-	 * @param internalNodePrunerObj
-	 * @param nodeSelectorObj
-	 * @param maxDepthVisitsWhilePruning
+	 * @param nodePrunerObj an object for establishing whether a node has to be pruned
+	 * @param treeSelectorObj an object for selecting trees from an Example
+	 * @param internalNodePrunerObj an object for establishing whether an internal 
+	 * node of the tree has to be pruned
+	 * @param nodeSelectorObj an object for selecting a list of nodes from which 
+	 * the visit of the tree will start
+	 * @param maxDepthVisitsWhilePruning maximum number of recursive calls when
+	 * visiting a tree
 	 */
-	public TreeNodePruner(SelectTreeRepresentationInterface treeSelectorObj,
-			NodeToBePrunedCheckerAbstractClass nodePrunerObj, 
+	public TreeNodePruner(NodeToBePrunedCheckerAbstractClass nodePrunerObj,
+			SelectRepresentationFromExample treeSelectorInExample, 
 			NodeToBePrunedCheckerAbstractClass internalNodePrunerObj,
 			TreeNodeSelector nodeSelectorObj, int maxDepthVisitsWhilePruning) {
-		treeSelector = treeSelectorObj;
 		nodePrunerChecker = nodePrunerObj;
 		internalNodePrunerChecker = internalNodePrunerObj;
 		nodeSelector = nodeSelectorObj;
 		maxDepthVisits = maxDepthVisitsWhilePruning;
 		visit = visitType.POST_ORDER;
-	}
-
-	public TreeNodePruner(SelectTreeRepresentationInterface treeSelectorObj,
-			NodeToBePrunedCheckerAbstractClass nodePrunerObj) {
-		this(treeSelectorObj, nodePrunerObj, null, null, UNLIMITED_RECURSION);
+		treeSelector = treeSelectorInExample;
 	}
 
 	/**
 	 * Create a tree pruner which performs a pre-order traversal of the tree.
 	 * 
-	 * @param treeSelectorObj
-	 * @param nodePrunerForPreOrderVisit
-	 * @param nodeSelectorObj
-	 * @param maxDepthVisitsWhilePruning
+	 * @param nodePrunerForPreOrderVisit an object performing the pruning of a node
+	 * @param nodeSelectorObj an object for selecting a list of nodes from which 
+	 * the visit of the tree will start
+	 * @param maxDepthVisitsWhilePruning maximum number of recursive calls when
+	 * visiting a tree
 	 */
-	public TreeNodePruner(SelectTreeRepresentationInterface treeSelectorObj,
-			NodePruner nodePrunerForPreOrderVisit, 
+	public TreeNodePruner(NodePruner nodePrunerForPreOrderVisit, 
+			SelectRepresentationFromExample treeSelectorInExample,
 			TreeNodeSelector nodeSelectorObj, int maxDepthVisitsWhilePruning) {
-		treeSelector = treeSelectorObj;
+		
 		this.nodePrunerForPreOrderVisit = nodePrunerForPreOrderVisit;
 		nodeSelector = nodeSelectorObj;
 		maxDepthVisits = maxDepthVisitsWhilePruning;
 		visit = visitType.PRE_ORDER;
+		treeSelector = treeSelectorInExample;
+	}
+
+	public TreeNodePruner(NodeToBePrunedCheckerAbstractClass nodePrunerObj, 
+			String representationName) {
+		this(nodePrunerObj, new SelectRepresentationFromExample(representationName), 
+				null, null, UNLIMITED_RECURSION);
+	}
+
+	public TreeNodePruner(NodeToBePrunedCheckerAbstractClass nodePrunerObj, 
+			String representationName, boolean applyToLeftExampleInPair) {
+		
+		this(nodePrunerObj, new SelectRepresentationFromExample(representationName, 
+				applyToLeftExampleInPair?representationSelectorInExample.LEFT:representationSelectorInExample.RIGHT), 
+				null, null, UNLIMITED_RECURSION);
+	}
+
+	/**
+	 * Create a tree pruner which performs a pre-order traversal of the tree.
+	 * 
+	 * @param nodePrunerForPreOrderVisit an object performing the pruning of a node
+	 * @param representationName name of the representation of the trees in the Example
+	 * @param nodeSelectorObj an object for selecting a list of nodes from which 
+	 * the visit of the tree will start
+	 * @param maxDepthVisitsWhilePruning maximum number of recursive calls when
+	 * visiting a tree
+	 */
+	public TreeNodePruner(NodePruner nodePrunerForPreOrderVisit, 
+			String representationName, TreeNodeSelector nodeSelectorObj, 
+			int maxDepthVisitsWhilePruning) {
+		
+		this.nodePrunerForPreOrderVisit = nodePrunerForPreOrderVisit;
+		nodeSelector = nodeSelectorObj;
+		maxDepthVisits = maxDepthVisitsWhilePruning;
+		visit = visitType.PRE_ORDER;
+		treeSelector = new SelectRepresentationFromExample(representationName);
 	}
 	
+	public void applyPruningToLeftElementOfExamplePair() {
+		treeSelector.setSelectionToLeftExampleInPairOnly();
+	}
+	
+	public void applyPruningToRightElementOfExamplePair() {
+		treeSelector.setSelectionToRightExampleInPairOnly();
+	}
+
 	/**
 	 * Describe what the elements of the tree-pruner will do once the manipulator
 	 * is invoked.  
@@ -174,28 +220,29 @@ public class TreeNodePruner implements Manipulator {
 	
 	@Override
 	public void manipulate(Example example) {
-		TreeRepresentation tree = treeSelector.GetTreeRepresentation(example);
+		TreeRepresentation tree = (TreeRepresentation) treeSelector.extractRepresentation(example);
 		if(tree != null) {
-			if(nodeSelector==null) {//by default pruning is applied starting from the root node of the tree
-				manipulateNodes(tree.getRoot(), maxDepthVisits);
-			}else{
-				for(TreeNode node: nodeSelector.getNodeList(tree.getRoot())) {
-					nodePrunerChecker.initPruner();
-					manipulateNodes(node, maxDepthVisits);
-				}
-			}
-			tree.updateTree();
+			pruneTree(tree);
 		}
 	}
 
+	public void pruneTree(TreeRepresentation tree) {
+		if(nodeSelector==null) {
+			/* by default pruning is applied starting from the root node of the tree */
+			manipulateNodes(tree.getRoot(), maxDepthVisits);
+		}else{
+			for(TreeNode node: nodeSelector.getNodeList(tree.getRoot())) {
+				nodePrunerChecker.initPruner();
+				manipulateNodes(node, maxDepthVisits);
+			}
+		}
+		tree.updateTree();		
+	}
+	
 	public void setMaximumDepthOfVisits(int maxDepth) {
 		maxDepthVisits = maxDepth;
 	}
 	
-	public void setTreeSelectorObj(SelectTreeRepresentationInterface newTreeSelector) {
-		treeSelector = newTreeSelector;
-	}
-
 	private void setVisitType(visitType treeVisit) {
 		visit = treeVisit;
 	}
@@ -236,7 +283,6 @@ public class TreeNodePruner implements Manipulator {
 		if(node == null){
 			return false;
 		}
-		//System.out.println(node.toString());
 		if (node.hasChildren()) {
 			if(numberOfRecursiveCalls>0) {
 				boolean nodeTobeRemoved;
@@ -283,28 +329,5 @@ public class TreeNodePruner implements Manipulator {
 				}
 			}
 		} 		
-		//the pruning procedure is not invoked for the node itself, it is only invoked for its children. Therefore the nodes on which the function is first invoked will never be pruned
-//		if (node.hasChildren() && internalNodePrunerChecker != null) {
-//			if (internalNodePrunerChecker != null) {
-//				internalNodePrunerChecker.isNodeToBePruned(node);
-//				//the return value of isNodeToBePruned() is ignored because a 
-//				//node cannot remove itself from the tree. The node should 
-//				//be removed when the function is invoked on the parent node
-//			} else {
-//				nodePrunerChecker.isNodeToBePruned(node);
-//			}
-//		}
-//		if (node.hasChildren()) {
-//			if(numberOfRecursiveCalls>0) {
-//				for (int i=0;i<node.getNoOfChildren();i++) { 
-//					pruneNodesWithPreOrderVisit(node.getChildren().get(i), 
-//							numberOfRecursiveCalls-1);
-//				}
-//			}
-//			if(internalNodePrunerChecker != null) {
-//				internalNodePrunerChecker.isNodeToBePruned(node);
-//			}
-//		} 
 	}
-
 }

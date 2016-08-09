@@ -27,9 +27,8 @@ import it.uniroma2.sag.kelp.data.representation.tree.node.nodePruner.PruneNodeIf
 import it.uniroma2.sag.kelp.data.representation.tree.node.nodePruner.PruneNodeLeafNumber;
 import it.uniroma2.sag.kelp.data.representation.tree.node.nodePruner.PruneNodeLowerThanThreshold;
 import it.uniroma2.sag.kelp.data.representation.tree.node.nodePruner.PruneNodeNumberOfChildren;
-import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectTreeRepresentationFromPair;
-import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectTreeRepresentationSimple;
-import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectTreeRepresentationInterface;
+import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectRepresentationFromExample;
+import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectRepresentationFromExample.representationSelectorInExample;
 import it.uniroma2.sag.kelp.data.representation.tree.utils.TreeNodeSelectorAllChildren;
 import it.uniroma2.sag.kelp.data.representation.tree.utils.TreeNodeSelectorAllLeaves;
 
@@ -50,14 +49,14 @@ public class TreePrunerEvaluator {
 		String tree2String = "(NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##JJS(LEX##best::j))(NOTYPE##NNP(LEX##bank::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##UH(LEX##hus::u))(NOTYPE##NNP(LEX##guy::n)))(NOTYPE##NP(NOTYPE##PRP(LEX##i::p)))(NOTYPE##VP(NOTYPE##VBP(LEX##need::v))(NOTYPE##TO(LEX##to::t))(NOTYPE##VB(LEX##open::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##new::j))(NOTYPE##NN(LEX##bank::n))(NOTYPE##NN(LEX##accoount::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##the::d))(NOTYPE##JJS(LEX##best::j))(NOTYPE##NN(LEX##bank::n)))(NOTYPE##PP(NOTYPE##IN(LEX##in::i)))(NOTYPE##NP(NOTYPE##NNP(LEX##qatar::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##PRP(LEX##i::p)))(NOTYPE##VP(NOTYPE##VBP(LEX##assume::v)))(NOTYPE##NP(NOTYPE##DT(LEX##all::d)))(NOTYPE##PP(NOTYPE##IN(LEX##of::i)))(NOTYPE##NP(NOTYPE##PRP(LEX##them::p)))(NOTYPE##VP(NOTYPE##MD(LEX##will::m))(NOTYPE##RB(LEX##roughly::r))(NOTYPE##VB(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##the::d))(NOTYPE##JJ(LEX##same::j)))(NOTYPE##NP(NOTYPE##NN(LEX##stll::n)))(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##have::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##slight::j))(NOTYPE##NN(LEX##edge::n))(NOTYPE##-LRB-(LEX##{::-))(NOTYPE##NN(LEX##money::n))(NOTYPE##NN(LEX##transfer::n)))(NOTYPE##NP(NOTYPE##JJ(LEX##benifit::j))(NOTYPE##NN(LEX##etc::n))(NOTYPE##-RRB-(LEX##}::-))(NOTYPE##NNS(LEX##thanks::n)))))";
 		String exampleString = "Relevant |<||BT:tree|" + tree1String + " |ET| |,||BT:tree| " + tree2String + "|ET| |>|";
 		SimpleDataset dataset;
-		SelectTreeRepresentationFromPair treeSelector;
-		SelectTreeRepresentationSimple treeSelector2;
+		SelectRepresentationFromExample treeSelector;
+		SelectRepresentationFromExample treeSelector2;
 		String treepairAfter;
 		
 		//TEST 1
 		System.out.println("\n\n------\nEnsuring that all sentences in the parse tree have no more than 8 words");
 		dataset = getDatasetFromString(exampleString);
-		treeSelector = new SelectTreeRepresentationFromPair("tree", true);
+		treeSelector = new SelectRepresentationFromExample("tree", representationSelectorInExample.LEFT);
 		pruningMaxSentenceLength(dataset, 8, treeSelector);
 		treepairAfter = "Relevant |<||BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##NNP(LEX##good::n))(NOTYPE##NNP(LEX##bank::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##good::j))(NOTYPE##NN(LEX##bank::n)))(NOTYPE##PP(NOTYPE##IN(LEX##as::i)))(NOTYPE##PP(NOTYPE##IN(LEX##per::i)))(NOTYPE##NP(NOTYPE##PRP$(LEX##your::p)))))|ET| |,||BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##JJS(LEX##best::j))(NOTYPE##NNP(LEX##bank::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##UH(LEX##hus::u))(NOTYPE##NNP(LEX##guy::n)))(NOTYPE##NP(NOTYPE##PRP(LEX##i::p)))(NOTYPE##VP(NOTYPE##VBP(LEX##need::v))(NOTYPE##TO(LEX##to::t))(NOTYPE##VB(LEX##open::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##new::j))(NOTYPE##NN(LEX##bank::n))(NOTYPE##NN(LEX##accoount::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##the::d))(NOTYPE##JJS(LEX##best::j))(NOTYPE##NN(LEX##bank::n)))(NOTYPE##PP(NOTYPE##IN(LEX##in::i)))(NOTYPE##NP(NOTYPE##NNP(LEX##qatar::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##PRP(LEX##i::p)))(NOTYPE##VP(NOTYPE##VBP(LEX##assume::v)))(NOTYPE##NP(NOTYPE##DT(LEX##all::d)))(NOTYPE##PP(NOTYPE##IN(LEX##of::i)))(NOTYPE##NP(NOTYPE##PRP(LEX##them::p)))(NOTYPE##VP(NOTYPE##MD(LEX##will::m))(NOTYPE##RB(LEX##roughly::r))(NOTYPE##VB(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##the::d))(NOTYPE##JJ(LEX##same::j)))(NOTYPE##NP(NOTYPE##NN(LEX##stll::n)))(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##have::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##slight::j))(NOTYPE##NN(LEX##edge::n))(NOTYPE##-LRB-(LEX##{::-))(NOTYPE##NN(LEX##money::n))(NOTYPE##NN(LEX##transfer::n)))(NOTYPE##NP(NOTYPE##JJ(LEX##benifit::j))(NOTYPE##NN(LEX##etc::n))(NOTYPE##-RRB-(LEX##}::-))(NOTYPE##NNS(LEX##thanks::n)))))|ET| |>|";
 		System.out.println("Pruned sentence:" + getStringFromDataset(dataset));
@@ -66,7 +65,7 @@ public class TreePrunerEvaluator {
 
 		//TEST 2
 		dataset = getDatasetFromString(exampleString);
-		treeSelector = new SelectTreeRepresentationFromPair("tree", false);
+		treeSelector = new SelectRepresentationFromExample("tree", representationSelectorInExample.RIGHT);
 		pruningMaxSentenceLength(dataset, 7, treeSelector);
 		treepairAfter = "Relevant |<||BT:tree| " + tree1String + "|ET| |,||BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##JJS(LEX##best::j))(NOTYPE##NNP(LEX##bank::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##UH(LEX##hus::u))(NOTYPE##NNP(LEX##guy::n)))(NOTYPE##NP(NOTYPE##PRP(LEX##i::p)))(NOTYPE##VP(NOTYPE##VBP(LEX##need::v))(NOTYPE##TO(LEX##to::t))(NOTYPE##VB(LEX##open::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##the::d))(NOTYPE##JJS(LEX##best::j))(NOTYPE##NN(LEX##bank::n)))(NOTYPE##PP(NOTYPE##IN(LEX##in::i)))(NOTYPE##NP(NOTYPE##NNP(LEX##qatar::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##PRP(LEX##i::p)))(NOTYPE##VP(NOTYPE##VBP(LEX##assume::v)))(NOTYPE##NP(NOTYPE##DT(LEX##all::d)))(NOTYPE##PP(NOTYPE##IN(LEX##of::i)))(NOTYPE##NP(NOTYPE##PRP(LEX##them::p)))(NOTYPE##VP(NOTYPE##MD(LEX##will::m))(NOTYPE##RB(LEX##roughly::r)))))|ET| |>|";
 //		treepairAfter = "Relevant |<||BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##NNP(LEX##good::n))(NOTYPE##NNP(LEX##bank::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##good::j))(NOTYPE##NN(LEX##bank::n)))(NOTYPE##PP(NOTYPE##IN(LEX##as::i)))(NOTYPE##PP(NOTYPE##IN(LEX##per::i)))(NOTYPE##NP(NOTYPE##PRP$(LEX##your::p)))))|ET| |,||BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##JJS(LEX##best::j))(NOTYPE##NNP(LEX##bank::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##UH(LEX##hus::u))(NOTYPE##NNP(LEX##guy::n)))(NOTYPE##NP(NOTYPE##PRP(LEX##i::p)))(NOTYPE##VP(NOTYPE##VBP(LEX##need::v))(NOTYPE##TO(LEX##to::t))(NOTYPE##VB(LEX##open::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##new::j))(NOTYPE##NN(LEX##bank::n))(NOTYPE##NN(LEX##accoount::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##the::d))(NOTYPE##JJS(LEX##best::j))(NOTYPE##NN(LEX##bank::n)))(NOTYPE##PP(NOTYPE##IN(LEX##in::i)))(NOTYPE##NP(NOTYPE##NNP(LEX##qatar::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##PRP(LEX##i::p)))(NOTYPE##VP(NOTYPE##VBP(LEX##assume::v)))(NOTYPE##NP(NOTYPE##DT(LEX##all::d)))(NOTYPE##PP(NOTYPE##IN(LEX##of::i)))(NOTYPE##NP(NOTYPE##PRP(LEX##them::p)))(NOTYPE##VP(NOTYPE##MD(LEX##will::m))(NOTYPE##RB(LEX##roughly::r))(NOTYPE##VB(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##the::d))(NOTYPE##JJ(LEX##same::j)))(NOTYPE##NP(NOTYPE##NN(LEX##stll::n)))(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##have::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##slight::j))(NOTYPE##NN(LEX##edge::n))(NOTYPE##-LRB-(LEX##{::-))(NOTYPE##NN(LEX##money::n))(NOTYPE##NN(LEX##transfer::n)))(NOTYPE##NP(NOTYPE##JJ(LEX##benifit::j))(NOTYPE##NN(LEX##etc::n))(NOTYPE##-RRB-(LEX##}::-))(NOTYPE##NNS(LEX##thanks::n)))))|ET| |>|";
@@ -77,7 +76,7 @@ public class TreePrunerEvaluator {
 		//TEST 3
 		exampleString = "Relevant |BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##NNP(LEX##good::n))(NOTYPE##NNP(LEX##bank::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##good::j))(NOTYPE##NN(LEX##bank::n)))(NOTYPE##PP(NOTYPE##IN(LEX##as::i)))(NOTYPE##PP(NOTYPE##IN(LEX##per::i)))(NOTYPE##NP(NOTYPE##PRP$(LEX##your::p))(NOTYPE##NN(LEX##experience::n)))(NOTYPE##PP(NOTYPE##IN(LEX##in::i)))(NOTYPE##NP(NOTYPE##NNP(LEX##doha::n)))))|ET|";
 		dataset = getDatasetFromString(exampleString);
-		treeSelector2 = new SelectTreeRepresentationSimple("tree");
+		treeSelector2 = new SelectRepresentationFromExample("tree");
 		pruningMaxSentenceLength(dataset, 1, treeSelector2);
 		treepairAfter = "Relevant |BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##NNP(LEX##good::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))))|ET| ";
 		System.out.println("Pruned sentence:" + getStringFromDataset(dataset));
@@ -89,11 +88,10 @@ public class TreePrunerEvaluator {
 	@Test
 	public void testMaxNumberOfSentencesPruning() {
 		SimpleDataset dataset;
-		SelectTreeRepresentationSimple treeSelector2 = new SelectTreeRepresentationSimple("tree");
 		String exampleString = "Relevant |BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##NNP(LEX##good::n))(NOTYPE##NNP(LEX##bank::n))))(NOTYPE##S(NOTYPE##NP(NOTYPE##WDT(LEX##which::w)))(NOTYPE##VP(NOTYPE##VBZ(LEX##be::v)))(NOTYPE##NP(NOTYPE##DT(LEX##a::d))(NOTYPE##JJ(LEX##good::j))(NOTYPE##NN(LEX##bank::n)))(NOTYPE##PP(NOTYPE##IN(LEX##as::i)))(NOTYPE##PP(NOTYPE##IN(LEX##per::i)))(NOTYPE##NP(NOTYPE##PRP$(LEX##your::p))(NOTYPE##NN(LEX##experience::n)))(NOTYPE##PP(NOTYPE##IN(LEX##in::i)))(NOTYPE##NP(NOTYPE##NNP(LEX##doha::n)))))|ET|";
 		dataset = getDatasetFromString(exampleString);
 		PruneNodeNumberOfChildren childrenPruner = new PruneNodeNumberOfChildren(1);
-		TreeNodePruner treePruner = new TreeNodePruner(treeSelector2, childrenPruner, null, 0);
+		TreeNodePruner treePruner = new TreeNodePruner(childrenPruner, "tree", null, 0);
 		System.out.println("Removing all sentences but the first one");
 		System.out.println(treePruner.describe());
 		dataset.manipulate(treePruner);
@@ -106,7 +104,6 @@ public class TreePrunerEvaluator {
 	@Test
 	public void testPruningThreshold() {
 		SimpleDataset dataset;
-		SelectTreeRepresentationSimple treeSelector2 = new SelectTreeRepresentationSimple("tree");
 		String exampleString = "Relevant |BT:tree| (NOTYPE##ROOT(NOTYPE##S(NOTYPE##NP(NOTYPE##NNP(LEX##good::n))(NOTYPE##NNP(LEX##bank::n)))))|ET| ";
 		dataset = getDatasetFromString(exampleString);
 		List<List<Double>> info = new ArrayList<List<Double>>();
@@ -114,11 +111,10 @@ public class TreePrunerEvaluator {
 		weights.add(0.1);weights.add(0.4); 
 		info.add(weights);
 		TreeAddAdditionalInfoFromArray weigthLoader = 
-				new TreeAddAdditionalInfoFromArray(treeSelector2, 
-						new TreeNodeSelectorAllLeaves(), info, "weight");
+				new TreeAddAdditionalInfoFromArray(new TreeNodeSelectorAllLeaves(), info, "weight", "tree");
 		PruneNodeLowerThanThreshold nodePrunerChecker = 
 				new PruneNodeLowerThanThreshold(0.3, "weight", true, 1.0);
-		TreeNodePruner treePruner = new TreeNodePruner(treeSelector2, nodePrunerChecker);
+		TreeNodePruner treePruner = new TreeNodePruner(nodePrunerChecker, "tree");
 		System.out.println("Removing all nodes whose value of the field -weight- is lower than 0.3");
 		System.out.println(weigthLoader.describe());
 		System.out.println(treePruner.describe());
@@ -153,27 +149,25 @@ public class TreePrunerEvaluator {
 	}
 		
 	public static void pruningMaxSentenceLength(SimpleDataset dataset, 
-			int maxNumberOfLeavesPerSubtree, SelectTreeRepresentationInterface treeSelector) {
+			int maxNumberOfLeavesPerSubtree, SelectRepresentationFromExample treeSelector) {
 		PruneNodeLeafNumber sentenceLengthPruner = 
 				new PruneNodeLeafNumber(maxNumberOfLeavesPerSubtree);
 		PruneNodeIfLeaf internalNodePruner = new PruneNodeIfLeaf();
-		TreeNodeSelectorAllChildren sentenceRoots = new TreeNodeSelectorAllChildren(); 
-		TreeNodePruner sentencePrunerClass = new TreeNodePruner(
-				treeSelector, sentenceLengthPruner, internalNodePruner, 
-				sentenceRoots, TreeNodePruner.UNLIMITED_RECURSION);
+		TreeNodeSelectorAllChildren sentenceRoots = new TreeNodeSelectorAllChildren();
+		TreeNodePruner sentencePrunerClass = new TreeNodePruner(sentenceLengthPruner, 
+				treeSelector, internalNodePruner, sentenceRoots, TreeNodePruner.UNLIMITED_RECURSION);
 		System.out.println(sentencePrunerClass.describe());
 		dataset.manipulate(sentencePrunerClass);
 	}
 	
 	public static void testMaxNumberOfSentences(SimpleDataset dataset, int maxNumberOfSentences, 
-			SelectTreeRepresentationInterface treeSelector) {
+			SelectRepresentationFromExample treeSelector) {
 		PruneNodeLeafNumber sentenceLengthPruner = 
 				new PruneNodeLeafNumber(maxNumberOfSentences);
 		PruneNodeIfLeaf internalNodePruner = new PruneNodeIfLeaf();
 		TreeNodeSelectorAllChildren sentenceRoots = new TreeNodeSelectorAllChildren(); 
-		TreeNodePruner sentencePrunerClass = new TreeNodePruner(
-				treeSelector, sentenceLengthPruner, internalNodePruner, 
-				sentenceRoots, 1);
+		TreeNodePruner sentencePrunerClass = new TreeNodePruner(sentenceLengthPruner,
+				 treeSelector, internalNodePruner, sentenceRoots, 1);
 		dataset.manipulate(sentencePrunerClass);
 	}
 

@@ -18,9 +18,11 @@ package it.uniroma2.sag.kelp.data.manipulator;
 import java.util.List;
 
 import it.uniroma2.sag.kelp.data.example.Example;
+import it.uniroma2.sag.kelp.data.example.ExamplePair;
 import it.uniroma2.sag.kelp.data.representation.tree.TreeRepresentation;
 import it.uniroma2.sag.kelp.data.representation.tree.node.TreeNode;
-import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectTreeRepresentationInterface;
+import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectRepresentationFromExample;
+import it.uniroma2.sag.kelp.data.representation.tree.utils.SelectRepresentationFromExample.representationSelectorInExample;
 import it.uniroma2.sag.kelp.data.representation.tree.utils.TreeNodeSelector;
 
 /**
@@ -28,8 +30,10 @@ import it.uniroma2.sag.kelp.data.representation.tree.utils.TreeNodeSelector;
  * of the field is determined by a List of Doubles passed to the constructor.
  * 
  * Note that <code>treeNodeSelector</code> determines the nodes of the tree 
- * which additional information is added to, which means not necessarily information
- * has to be added to all nodes of the tree.   
+ * which additional information is added to, which means that not necessarily 
+ * information has to be added to all nodes of the tree.   
+ * The static method <code>addInfoToNodes()</code> allows to perform the same
+ * operation on a single tree. 
  * 
  * @author Giovanni Da San Martino
  *
@@ -39,7 +43,7 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 	/**
 	 * A class for selecting the tree to be manipulated from the Example.  
 	 */
-	private SelectTreeRepresentationInterface treeSelector;
+	private SelectRepresentationFromExample representationSelector;
 	/**
 	 * A class for determining the nodes of the tree which additional 
 	 * information will be added to
@@ -50,52 +54,117 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 	 * The outer list has as many elements as the examples in the dataset.  
 	 */
 	private List<List<Double>> datasetNodeInfo;
-	private String infoFieldName = "weight";
+	private String infoFieldName;
 	private int exampleIndex;
-
+	private static final String DEFAULT_FIELD_NAME = "weight";
 	/**
 	 * Create a manipulator which adds an additional field to selected tree nodes
 	 * whose values are determined by the parameter <code>info</code>. 
 	 * 
-	 * @param treeSelector A class for retrieving a tree from the Example
 	 * @param treeNodeSelector determines the nodes of the tree which additional 
 	 * information is added to  
 	 * @param info an array of Double containing the additional information to 
 	 * be added. It must be ensured that the order of the elements in the array 
-	 * is consistent with the order of the nodes as returned by <code>treeNodeSelector</code>  
+	 * is consistent with the order of the nodes as returned by <code>treeNodeSelector</code>
+	 * @param fieldName the name of the field in the nodes of trees which will 
+	 * store the additional info
+	 * @param representationSelectorInExampleClass A class for retrieving a tree 
+	 * from the Example
 	 */
-	public TreeAddAdditionalInfoFromArray(SelectTreeRepresentationInterface treeSelector, 
-			TreeNodeSelector treeNodeSelector, List<List<Double>> info) {  
-		this.treeSelector = treeSelector;
+	public TreeAddAdditionalInfoFromArray(TreeNodeSelector treeNodeSelector, 
+			List<List<Double>> info, String fieldName, 
+			SelectRepresentationFromExample representationSelectorInExampleClass) {  
 		this.treeNodeSelector = treeNodeSelector;
 		datasetNodeInfo = info;
 		exampleIndex = 0;
+		infoFieldName = fieldName;
+		representationSelector = representationSelectorInExampleClass;
 	}
 
+	
+	/**
+	 * Create a manipulator which adds an additional field to selected tree nodes
+	 * whose values are determined by the parameter <code>info</code>. 
+	 * 
+	 * @param treeNodeSelector determines the nodes of the tree which additional 
+	 * information is added to  
+	 * @param info an array of Double containing the additional information to 
+	 * be added. It must be ensured that the order of the elements in the array 
+	 * is consistent with the order of the nodes as returned by <code>treeNodeSelector</code>
+	 * @param fieldName the name of the field in the nodes of trees which will
+	 * store the additional info
+	 * @param representation name of the representation of the trees in the Example
+	 * It assumes Example not to be an ExamplePair  
+	 */
+	public TreeAddAdditionalInfoFromArray(TreeNodeSelector treeNodeSelector, 
+			List<List<Double>> info, String fieldName, 
+			String representation) {
+		this(treeNodeSelector, info, fieldName, 
+				new SelectRepresentationFromExample(representation));
+	}
+
+	
 	/**
 	 * Create a manipulator which adds an additional field to selected tree nodes
 	 * whose values are given by the List<List<Double>> <code>info</code>
 	 * passed as parameter to the constructor. 
 	 * 
-	 * @param treeSelector A class for retrieving a tree from the Example
 	 * @param treeNodeSelector determines the nodes of the tree which additional 
 	 * information is added to  
 	 * @param info an array of Double containing the additional information to 
 	 * be added. It must be ensured that the order of the elements in the array 
 	 * is consistent with the order of the nodes as returned by <code>treeNodeSelector</code>  
 	 * @param fieldName the name of the field in which the additional information
-	 * is stored. 
+	 * will be stored. 
+	 * @param representation name of the representation of the trees in the Example
+	 * It assumes Example is an ExamplePair
+	 * @param applyToLeftExampleInPair a boolean specifying whether the 
+	 * additional info is to be applied to the left element of the 
+	 * ExamplePair (true) or to the right one (false)
+	 * 
 	 */
-	public TreeAddAdditionalInfoFromArray(SelectTreeRepresentationInterface treeSelector, 
-			TreeNodeSelector treeNodeSelector, List<List<Double>> info, String fieldName) {
-		this(treeSelector, treeNodeSelector, info);
-		infoFieldName = fieldName;
+	public TreeAddAdditionalInfoFromArray(TreeNodeSelector treeNodeSelector, 
+			List<List<Double>> info, String fieldName, 
+			String representation, boolean applyToLeftExampleInPair) {
+
+		this(treeNodeSelector, info, fieldName, 
+				new SelectRepresentationFromExample(representation, 
+						applyToLeftExampleInPair?representationSelectorInExample.LEFT:
+							representationSelectorInExample.RIGHT));
 	}
-	
+
+	/**
+	 * Create a manipulator which adds an additional field to selected tree nodes
+	 * whose values are given by the List<List<Double>> <code>info</code>
+	 * passed as parameter to the constructor. The data is added to a node field
+	 * with the default name "weight" 
+	 * 
+	 * @param treeNodeSelector determines the nodes of the tree which additional 
+	 * information is added to  
+	 * @param info an array of Double containing the additional information to 
+	 * be added. It must be ensured that the order of the elements in the array 
+	 * is consistent with the order of the nodes as returned by <code>treeNodeSelector</code> 
+	 * @param representation name of the representation of the trees in the Example
+	 * It assumes Example is an ExamplePair
+	 * @param applyToLeftExampleInPair a boolean specifying whether the 
+	 * additional info is to be applied to the left element of the 
+	 * ExamplePair (true) or to the right one (false)
+	 * 
+	 */
+	public TreeAddAdditionalInfoFromArray(TreeNodeSelector treeNodeSelector, 
+			List<List<Double>> info, String representation, boolean applyToLeftExampleInPair) {
+
+		this(treeNodeSelector, info, DEFAULT_FIELD_NAME, 
+				new SelectRepresentationFromExample(representation, 
+						applyToLeftExampleInPair?representationSelectorInExample.LEFT:
+							representationSelectorInExample.RIGHT));
+	}
+
 	public String describe() {
 		String msg = "Created Manpulator which adds an additional field to tree "
 				+ "nodes. The object is instantiated as follows:"  + System.getProperty("line.separator")
-				+ "Tree Selector object: " + treeSelector.describe() + System.getProperty("line.separator");
+				+ "Tree Selector object: " + representationSelector.describe() 
+				+ System.getProperty("line.separator");
 		msg += "The nodes for which the new field will be added are:" 
 				+ treeNodeSelector.describe() + " , i.e. the root of the tree" + System.getProperty("line.separator");
 		msg += "new field name: " + infoFieldName + System.getProperty("line.separator");
@@ -105,34 +174,50 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 	
 	@Override
 	public void manipulate(Example example) {
-		TreeRepresentation tree = treeSelector.GetTreeRepresentation(example);
+		
+		if(exampleIndex==0) {
+			/* checking that it has not been invoked for all examples of an Example Pair */
+			if(example instanceof ExamplePair && representationSelector.isInvokedForAllPairElements()) {
+				System.out.println("ERROR: the class TreeAddAdditionalInfoFromArray "
+						+ "must be invoked only on one example of an Example Pair!");
+			}
+		}
+		TreeRepresentation tree = (TreeRepresentation) representationSelector.extractRepresentation(example);
 		if(tree != null) {
-			manipulateTree(tree, datasetNodeInfo.get(exampleIndex));
+			addInfoToNodes(treeNodeSelector.getNodeList(tree.getRoot()), 
+					datasetNodeInfo.get(exampleIndex), infoFieldName);
 			exampleIndex += 1;
 		}
 	}
-
-	private void manipulateTree(TreeRepresentation tree, List<Double> nodeInfo) {
+	
+	/**
+	 * A function for adding additional info to tree nodes. 
+	 * Note that the function is public static, so it can be invoked directly 
+	 * to add info to a single tree.  
+	 * 
+	 * @param nodes a TreeNode list representing the nodes which the info will
+	 * be added to  
+	 * @param nodeInfo a Double list with the info that will be attached to nodes
+	 * @param fieldName the name of the field in the tree structure
+	 */
+	public static void addInfoToNodes(List<TreeNode> nodes, 
+			List<Double> nodeInfo, String fieldName) {
 		//TreeNodeSelector getNodeList = node -> node.getLeaves(); 
-		//TreeNodeSelector getNodeList = node -> node.getAllNodes();		
-		List<TreeNode> nodes;
-		if(tree != null){
-			nodes = treeNodeSelector.getNodeList(tree.getRoot());
-			if(nodes.size() != nodeInfo.size()) {
-				System.out.println(String.format("ERROR: trying to add info to "
-						+ "nodes from an array which does not have the same size (%d)"
-						+ " of the nodes of the tree (%d)%n", nodeInfo.size(), nodes.size()));
-				for(TreeNode n: nodes) {
-					System.out.format(" %s", n.getContent().getTextFromData());
-				}
-				System.out.format("%nexternal info to be added: %s", nodeInfo.toString());
-				System.exit(1);
+		//TreeNodeSelector getNodeList = node -> node.getAllNodes();
+		if(nodes.size() != nodeInfo.size()) {
+			System.out.println(String.format("ERROR: trying to add info to "
+					+ "nodes from an array which does not have the same size (%d)"
+					+ " of the nodes of the tree (%d)%n", nodeInfo.size(), nodes.size()));
+			for(TreeNode n: nodes) {
+				System.out.format(" %s", n.getContent().getTextFromData());
 			}
-	        int i=0;
-	        for(TreeNode n: nodes) {
-	            n.getContent().addAdditionalInformation(infoFieldName, nodeInfo.get(i));
-	            i+=1;
-	        }
+			System.out.format("%nexternal info to be added: %s", nodeInfo.toString());
+			System.exit(1);
+		}
+		int i=0;
+		for(TreeNode n: nodes) {
+			n.getContent().addAdditionalInformation(fieldName, nodeInfo.get(i));
+			i+=1;
 		}
 	}
 
