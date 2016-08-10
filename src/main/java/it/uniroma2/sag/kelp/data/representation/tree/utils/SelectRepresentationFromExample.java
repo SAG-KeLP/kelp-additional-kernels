@@ -46,7 +46,7 @@ public class SelectRepresentationFromExample {
 	public String describe() {
 		String msg = "Selecting representation -" + representation + "- ";
 		if(representationSelector == representationSelectorInExample.ALL) {
-			msg += "from left example in Example Pair";
+			msg += "from Example";
 		}else {
 			msg += String.format("from %s example in Example Pair", 
 					representationSelector == representationSelectorInExample.LEFT?"left":"right");

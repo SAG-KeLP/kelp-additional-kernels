@@ -25,32 +25,12 @@ import it.uniroma2.sag.kelp.data.representation.tree.node.TreeNode;
  * @author Giovanni Da San Martino
  *
  */
-//public class PruneNodeNumberOfChildren extends NodeToBePrunedCheckerAbstractClass {
 public class PruneNodeNumberOfChildren extends NodePruner {
 	protected int maxNumberOfChildren;
 	
 	public PruneNodeNumberOfChildren(int maxNumberOfChildren) {
 		this.maxNumberOfChildren = maxNumberOfChildren;
 	}
-
-//	/**
-//	 * The pruning strategy keeps the first <code>maxNumberOfChildren</code> child
-//	 * of a node and discard the following ones. 
-//	 * This pruning strategy is assumed to be invoked in a pre-order tree visit.  
-//	 * 
-//	 * The function directly removes some of the children of a <code>node</code>.
-//	 * Note that, since the function has been invoked on <code>node</code>, the 
-//	 * index of <code>node</code> in the children list of its parent node is lower 
-//	 * than <code>maxNumberOfChildren</code>. Therefore <node> should never be 
-//	 * pruned and the function always returns false. 
-//	 */
-//	@Override
-//	public boolean isNodeToBePruned(TreeNode node) {
-//		for(int i=node.getNoOfChildren()-1;i>=maxNumberOfChildren;i-=1) {
-//			node.getChildren().remove(i);
-//		}
-//		return false;
-//	}
 	
 	public String describe() {
 		return String.format("a node is pruned if it is the n-th child, where "

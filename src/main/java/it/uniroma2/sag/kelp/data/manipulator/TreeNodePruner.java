@@ -139,6 +139,14 @@ public class TreeNodePruner implements Manipulator {
 		treeSelector = treeSelectorInExample;
 	}
 
+	public TreeNodePruner(NodeToBePrunedCheckerAbstractClass nodePrunerObj,
+			String representationName, NodeToBePrunedCheckerAbstractClass internalNodePrunerObj,
+			TreeNodeSelector nodeSelectorObj, int maxDepthVisitsWhilePruning) {
+		this(nodePrunerObj, new SelectRepresentationFromExample(representationName), 
+				internalNodePrunerObj, nodeSelectorObj, maxDepthVisitsWhilePruning);
+	}
+
+	
 	public TreeNodePruner(NodeToBePrunedCheckerAbstractClass nodePrunerObj, 
 			String representationName) {
 		this(nodePrunerObj, new SelectRepresentationFromExample(representationName), 
@@ -197,9 +205,10 @@ public class TreeNodePruner implements Manipulator {
 						+ internalNodePrunerChecker.describe() + System.getProperty("line.separator");
 				msg += "Pruning Strategy for leaf nodes: " 
 						+ nodePrunerChecker.describe() + System.getProperty("line.separator");
+			} else {
+				msg += "General Pruning Strategy for nodes: " 
+						+ nodePrunerChecker.describe() + System.getProperty("line.separator");
 			}
-			msg += "General Pruning Strategy for nodes: " 
-					+ nodePrunerChecker.describe() + System.getProperty("line.separator");
 		}
 		if (visit == visitType.PRE_ORDER) {
 			msg += "A pre order visit will be performed" + System.getProperty("line.separator");
@@ -232,7 +241,6 @@ public class TreeNodePruner implements Manipulator {
 			manipulateNodes(tree.getRoot(), maxDepthVisits);
 		}else{
 			for(TreeNode node: nodeSelector.getNodeList(tree.getRoot())) {
-				nodePrunerChecker.initPruner();
 				manipulateNodes(node, maxDepthVisits);
 			}
 		}
@@ -257,8 +265,10 @@ public class TreeNodePruner implements Manipulator {
 
 	private void manipulateNodes(TreeNode node, int numberOfRecursiveCalls) {
 		if(visit == visitType.POST_ORDER) { 
+			nodePrunerChecker.initPruner();
 			pruneNodesWithPostOrderVisit(node, numberOfRecursiveCalls);
 		}else if(visit == visitType.PRE_ORDER) {
+			nodePrunerForPreOrderVisit.initPruner();
 			pruneNodesWithPreOrderVisit(node, numberOfRecursiveCalls);
 		}
 	}
