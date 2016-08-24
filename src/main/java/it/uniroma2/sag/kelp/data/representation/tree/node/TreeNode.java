@@ -284,9 +284,10 @@ public class TreeNode implements Serializable {
 	public int getHeight(){
 		
 		int max = 0;
-		for(TreeNode child : children){
-			if(child.getHeight()+1 > max){
-				max = child.getHeight()+1;
+		for (TreeNode child : children) {
+			int childHeight = child.getHeight();
+			if (childHeight + 1 > max) {
+				max = childHeight + 1;
 			}
 		}
 		return max;
