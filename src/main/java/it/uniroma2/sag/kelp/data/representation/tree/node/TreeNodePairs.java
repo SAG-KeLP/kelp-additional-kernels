@@ -53,7 +53,7 @@ public class TreeNodePairs implements Serializable {
 
 	@Override
 	public String toString() {
-		return Nx.getProduction() + "-" + Nx.getId() + "\t"
-				+ Nz.getProduction() + "-" + Nz.getId();
+		return String.valueOf(Nx.getProduction()) + "-" + Nx.getId() + "\t"
+				+ String.valueOf(Nz.getProduction()) + "-" + Nz.getId();
 	}
 }

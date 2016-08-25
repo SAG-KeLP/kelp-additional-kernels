@@ -57,13 +57,13 @@ public class TreeNode implements Serializable {
 	 * A string encoding the node production, e.g. in (S(NP)(VP)) the production
 	 * string is S->NP,VP
 	 */
-	private String production;
+	private char[] production;
 	
 	/**
 	 * A string encoding the node production, e.g. in (S(NP)(VP)) the production
 	 * string is S->NP,VP. Leaf children are ignored
 	 */
-	private String productionIgnoringLeaves;
+	private char[] productionIgnoringLeaves;
 
 	public TreeNode(int id, StructureElement content, TreeNode father) {
 		this.id = id;
@@ -81,6 +81,7 @@ public class TreeNode implements Serializable {
 		this.updateProduction();
 	}
 
+	
 	/**
 	 * Get recursively all Tree Nodes below the target node
 	 * 
@@ -146,17 +147,19 @@ public class TreeNode implements Serializable {
 	 * 
 	 * @return the node production as a string
 	 */
-	public String getProduction() {
+	public char[] getProduction() {
 		if (production != null)
 			return production;
 
-		//production = this.content.getTextFromData() + "->";
-		production = StructureElementFactory.getTextualRepresentation(this.content) + "->";
+		// production = this.content.getTextFromData() + "->";
+		String productionTmp = StructureElementFactory.getTextualRepresentation(this.content) + "->";
 
 		for (TreeNode child : children) {
-			//production += child.getContent().getTextFromData() + " ";
-			production += StructureElementFactory.getTextualRepresentation(child.getContent()) + " ";
+			// production += child.getContent().getTextFromData() + " ";
+			productionTmp += StructureElementFactory.getTextualRepresentation(child.getContent()) + " ";
 		}
+
+		production = productionTmp.toCharArray();
 
 		return production;
 	}
@@ -168,20 +171,22 @@ public class TreeNode implements Serializable {
 	 * 
 	 * @return the node production as a string. Leaf children are ignored
 	 */
-	public String getProductionIgnoringLeaves() {
+	public char[] getProductionIgnoringLeaves() {
 		if (productionIgnoringLeaves != null)
 			return productionIgnoringLeaves;
 
-		//production = this.content.getTextFromData() + "->";
-		productionIgnoringLeaves = StructureElementFactory.getTextualRepresentation(this.content) + "->";
+		// production = this.content.getTextFromData() + "->";
+		String productionIgnoringLeavesTmp = StructureElementFactory.getTextualRepresentation(this.content) + "->";
 
 		for (TreeNode child : children) {
-			if(!child.hasChildren()){
+			if (!child.hasChildren()) {
 				continue;
 			}
-			//production += child.getContent().getTextFromData() + " ";
-			productionIgnoringLeaves += StructureElementFactory.getTextualRepresentation(child.getContent()) + " ";
+			// production += child.getContent().getTextFromData() + " ";
+			productionIgnoringLeavesTmp += StructureElementFactory.getTextualRepresentation(child.getContent()) + " ";
 		}
+
+		productionIgnoringLeaves = productionIgnoringLeavesTmp.toCharArray();
 
 		return productionIgnoringLeaves;
 	}

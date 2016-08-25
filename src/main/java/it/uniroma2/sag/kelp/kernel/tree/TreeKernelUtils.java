@@ -68,7 +68,7 @@ public class TreeKernelUtils {
 
 		while (i < nA && j < nB) {
 
-			if ((cfr = (nodesA.get(i).getProduction().compareTo(nodesB.get(j)
+			if ((cfr = TreeKernelUtils.compareTo(nodesA.get(i).getProduction(), (nodesB.get(j)
 					.getProduction()))) > 0){
 				j++;
 			}
@@ -204,5 +204,24 @@ public class TreeKernelUtils {
 			return lambda * prod;
 		}
 	}
+	
+	public static int compareTo(char[] s, char[] t) {
+	    int i = 0;
+
+	    while (i < s.length && i < t.length) {
+	      char a = s[i];
+	      char b = t[i];
+
+	      int diff = a - b;
+
+	      if (diff != 0) {
+	        return diff;
+	      }
+
+	      i++;
+	    }
+
+	    return s.length - t.length;
+	  }
 
 }

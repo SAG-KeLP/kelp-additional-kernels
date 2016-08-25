@@ -19,6 +19,7 @@ import it.uniroma2.sag.kelp.data.representation.Representation;
 import it.uniroma2.sag.kelp.data.representation.structure.StructureElement;
 import it.uniroma2.sag.kelp.data.representation.tree.node.TreeNode;
 import it.uniroma2.sag.kelp.data.representation.tree.utils.TreeIO;
+import it.uniroma2.sag.kelp.kernel.tree.TreeKernelUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,7 +94,7 @@ public class TreeRepresentation implements Representation {
 	 */
 	private static final Comparator<TreeNode> AlphabeticalProductionComparator = new Comparator<TreeNode>() {
 		public int compare(TreeNode e1, TreeNode e2) {
-			return e1.getProduction().compareTo(e2.getProduction());
+			return TreeKernelUtils.compareTo(e1.getProduction(), e2.getProduction());
 		}
 	};
 	
