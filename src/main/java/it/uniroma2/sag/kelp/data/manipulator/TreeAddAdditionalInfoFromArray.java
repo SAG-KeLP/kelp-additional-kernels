@@ -184,8 +184,11 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 		}
 		TreeRepresentation tree = (TreeRepresentation) representationSelector.extractRepresentation(example);
 		if(tree != null) {
-			addInfoToNodes(treeNodeSelector.getNodeList(tree.getRoot()), 
-					datasetNodeInfo.get(exampleIndex), infoFieldName);
+			if(! addInfoToNodes(treeNodeSelector.getNodeList(tree.getRoot()), 
+					datasetNodeInfo.get(exampleIndex), infoFieldName)) {
+				System.out.println("Error in example " + (exampleIndex+1));
+				System.exit(1);
+			}
 			exampleIndex += 1;
 		}
 	}
@@ -200,7 +203,7 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 	 * @param nodeInfo a Double list with the info that will be attached to nodes
 	 * @param fieldName the name of the field in the tree structure
 	 */
-	public static void addInfoToNodes(List<TreeNode> nodes, 
+	public static boolean addInfoToNodes(List<TreeNode> nodes, 
 			List<Double> nodeInfo, String fieldName) {
 		//TreeNodeSelector getNodeList = node -> node.getLeaves(); 
 		//TreeNodeSelector getNodeList = node -> node.getAllNodes();
@@ -209,16 +212,17 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 					+ "nodes from an array which does not have the same size (%d)"
 					+ " of the nodes of the tree (%d)%n", nodeInfo.size(), nodes.size()));
 			for(TreeNode n: nodes) {
-				System.out.format(" %s", n.getContent().getTextFromData());
+				System.out.format("---%s", n.getContent().getTextFromData());
 			}
-			System.out.format("%nexternal info to be added: %s", nodeInfo.toString());
-			System.exit(1);
+			System.out.format("%nexternal info to be added: %s%n", nodeInfo.toString());
+			return false;
 		}
 		int i=0;
 		for(TreeNode n: nodes) {
 			n.getContent().addAdditionalInformation(fieldName, nodeInfo.get(i));
 			i+=1;
 		}
+		return true;
 	}
 
 }
