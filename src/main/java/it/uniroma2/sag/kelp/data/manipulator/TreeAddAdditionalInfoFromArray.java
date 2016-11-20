@@ -212,7 +212,7 @@ public class TreeAddAdditionalInfoFromArray implements Manipulator {
 					+ "nodes from an array which does not have the same size (%d)"
 					+ " of the nodes of the tree (%d)%n", nodeInfo.size(), nodes.size()));
 			for(TreeNode n: nodes) {
-				System.out.format("---%s", n.getContent().getTextFromData());
+				System.out.format(" %s", n.getContent().getTextFromData());
 			}
 			System.out.format("%nexternal info to be added: %s%n", nodeInfo.toString());
 			return false;
