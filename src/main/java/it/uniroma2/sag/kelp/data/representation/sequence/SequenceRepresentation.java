@@ -15,11 +15,6 @@
 
 package it.uniroma2.sag.kelp.data.representation.sequence;
 
-import it.uniroma2.sag.kelp.data.representation.Representation;
-import it.uniroma2.sag.kelp.data.representation.structure.StructureElement;
-import it.uniroma2.sag.kelp.data.representation.structure.StructureElementFactory;
-import it.uniroma2.sag.kelp.data.representation.tree.TreeRepresentation;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +24,10 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import it.uniroma2.sag.kelp.data.representation.Representation;
+import it.uniroma2.sag.kelp.data.representation.structure.StructureElement;
+import it.uniroma2.sag.kelp.data.representation.structure.StructureElementFactory;
 
 
 /**
@@ -110,7 +109,7 @@ public class SequenceRepresentation implements Representation{
 	
 	@Override
 	public boolean isCompatible(Representation rep) {
-		if (!( rep instanceof TreeRepresentation)){
+		if (!( rep instanceof SequenceRepresentation)){
 			logger.error("incompatible representations: " + this.getClass().getSimpleName() + " vs " + rep.getClass().getSimpleName());
 			return false;
 		}
