@@ -237,7 +237,7 @@ public class SmoothedPartialTreeKernel extends DirectKernel<TreeRepresentation> 
 				MAX_RECURSION = maxHeight;
 			logger.warn("Increasing the size of cache matrices to host trees with height=" + MAX_RECURSION
 					+ " and maxBranchingFactor=" + MAX_CHILDREN + "");
-			kernel_mat_buffer = new float[MAX_CHILDREN][MAX_CHILDREN];
+			kernel_mat_buffer = new float[MAX_RECURSION][MAX_CHILDREN];
 			DPS_buffer = new float[MAX_RECURSION][MAX_CHILDREN][MAX_CHILDREN];
 			DP_buffer = new float[MAX_RECURSION][MAX_CHILDREN][MAX_CHILDREN];
 		}
