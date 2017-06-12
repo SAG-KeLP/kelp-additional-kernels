@@ -104,6 +104,14 @@ public class TreeNode implements Serializable {
 	public ArrayList<TreeNode> getChildren() {
 		return children;
 	}
+	
+	/**
+	 * Set the direct children of the target node
+	 * 
+	 */
+	public void setChildren(ArrayList<TreeNode> children) {
+		this.children = children;
+	}
 
 	/**
 	 * Get the father of the target node
