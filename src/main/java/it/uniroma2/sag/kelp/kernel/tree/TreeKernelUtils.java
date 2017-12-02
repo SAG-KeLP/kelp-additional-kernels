@@ -21,6 +21,7 @@ import it.uniroma2.sag.kelp.data.representation.tree.node.TreeNodePairs;
 import it.uniroma2.sag.kelp.kernel.tree.deltamatrix.DeltaMatrix;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -183,18 +184,17 @@ public class TreeKernelUtils {
 	 * @return the result of the delta function
 	 */
 	public static float productionBasedDeltaFunction(TreeNode Nx, TreeNode Nz, int sigma, float lambda, DeltaMatrix deltaMatrix) {
-		if (deltaMatrix.get(Nx.getId(), Nz.getId()) != DeltaMatrix.NO_RESPONSE)
+		if (deltaMatrix.get(Nx.getId(), Nz.getId()) != DeltaMatrix.NO_RESPONSE){
 			return deltaMatrix.get(Nx.getId(), Nz.getId()); // cashed
+		}
 		else {
 			float prod = 1;
 			ArrayList<TreeNode> NxChildren = Nx.getChildren();
 			ArrayList<TreeNode> NzChildren = Nz.getChildren();
-			for (int i = 0; i < NxChildren.size() && i < NzChildren.size(); i++) {
-
+			for (int i = 0; i < NxChildren.size(); i++) {  
 				if (NxChildren.get(i).hasChildren()
 						&& NzChildren.get(i).hasChildren()
-						&& NxChildren.get(i).getProduction()
-						.equals(NzChildren.get(i).getProduction())) {
+						&& Arrays.equals(NxChildren.get(i).getProduction(), NzChildren.get(i).getProduction())) {
 
 					prod *= sigma + productionBasedDeltaFunction(NxChildren.get(i),
 							NzChildren.get(i), sigma, lambda, deltaMatrix);

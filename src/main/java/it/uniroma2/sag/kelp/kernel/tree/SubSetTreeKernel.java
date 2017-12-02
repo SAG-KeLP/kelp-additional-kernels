@@ -196,7 +196,6 @@ public class SubSetTreeKernel extends DirectKernel<TreeRepresentation>{
 
 			float deltaValue = TreeKernelUtils.productionBasedDeltaFunction(pairs.get(i).getNx(), pairs
 					.get(i).getNz(), 1, lambda, deltaMatrix);
-
 			sum += deltaValue;
 		}
 
