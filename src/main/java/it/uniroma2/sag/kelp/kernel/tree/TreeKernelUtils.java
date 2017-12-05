@@ -192,12 +192,19 @@ public class TreeKernelUtils {
 			ArrayList<TreeNode> NxChildren = Nx.getChildren();
 			ArrayList<TreeNode> NzChildren = Nz.getChildren();
 			for (int i = 0; i < NxChildren.size(); i++) {  
-				if (NxChildren.get(i).hasChildren()
-						&& NzChildren.get(i).hasChildren()
-						&& Arrays.equals(NxChildren.get(i).getProduction(), NzChildren.get(i).getProduction())) {
+//				if (NxChildren.get(i).hasChildren()
+//						&& NzChildren.get(i).hasChildren()
+//						&& Arrays.equals(NxChildren.get(i).getProduction(), NzChildren.get(i).getProduction())) {
+//
+//					prod *= sigma + productionBasedDeltaFunction(NxChildren.get(i),
+//							NzChildren.get(i), sigma, lambda, deltaMatrix);
+//				}
+				if (Arrays.equals(NxChildren.get(i).getProduction(), NzChildren.get(i).getProduction())) {
 
 					prod *= sigma + productionBasedDeltaFunction(NxChildren.get(i),
 							NzChildren.get(i), sigma, lambda, deltaMatrix);
+				}else{
+					prod *= sigma;
 				}
 			}
 			deltaMatrix.add(Nx.getId(), Nz.getId(), lambda * prod);
