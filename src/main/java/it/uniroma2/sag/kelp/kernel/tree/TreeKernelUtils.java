@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 /**
  * Class providing some static methods useful for various tree kernels
  * 
@@ -187,48 +189,91 @@ public class TreeKernelUtils {
 		if (deltaMatrix.get(Nx.getId(), Nz.getId()) != DeltaMatrix.NO_RESPONSE){
 			return deltaMatrix.get(Nx.getId(), Nz.getId()); // cashed
 		}
-		else {
-			float prod = 1;
-			ArrayList<TreeNode> NxChildren = Nx.getChildren();
-			ArrayList<TreeNode> NzChildren = Nz.getChildren();
-			for (int i = 0; i < NxChildren.size(); i++) {  
-//				if (NxChildren.get(i).hasChildren()
-//						&& NzChildren.get(i).hasChildren()
-//						&& Arrays.equals(NxChildren.get(i).getProduction(), NzChildren.get(i).getProduction())) {
-//
-//					prod *= sigma + productionBasedDeltaFunction(NxChildren.get(i),
-//							NzChildren.get(i), sigma, lambda, deltaMatrix);
-//				}
+
+		if(!ArrayUtils.isEquals(Nx.getProduction(), Nz.getProduction())){
+			deltaMatrix.add(Nx.getId(), Nz.getId(), 0);
+			return 0;
+		}
+
+		if(Nx.isPreterminal() && Nz.isPreterminal()){
+			deltaMatrix.add(Nx.getId(), Nz.getId(), lambda);
+			return lambda;
+		}
+		
+		float prod = 1;
+		ArrayList<TreeNode> NxChildren = Nx.getChildren();
+		ArrayList<TreeNode> NzChildren = Nz.getChildren();
+		for (int i = 0; i < NxChildren.size(); i++) {
+
+			if(NxChildren.get(i).hasChildren() && NxChildren.get(i).hasChildren()){// if one child is terminal
+				prod *= (sigma + productionBasedDeltaFunction(NxChildren.get(i), NzChildren.get(i), sigma, lambda, deltaMatrix));
+			}else{
+				if(NxChildren.get(i).hasChildren()!=NzChildren.get(i).hasChildren()){
+					prod *= sigma; //in this case subtrees should not match
+				}
+			}
+					
+		}
+		deltaMatrix.add(Nx.getId(), Nz.getId(), lambda * prod);
+		return lambda * prod;
+
+	}
+	
+	public static float productionBasedDeltaFunctionOld(TreeNode Nx, TreeNode Nz, int sigma, float lambda, DeltaMatrix deltaMatrix) {
+		if (deltaMatrix.get(Nx.getId(), Nz.getId()) != DeltaMatrix.NO_RESPONSE){
+			return deltaMatrix.get(Nx.getId(), Nz.getId()); // cashed
+		}
+
+		if(Nx.isPreterminal() && Nz.isPreterminal()){ //both nodes are pre-terminal
+			deltaMatrix.add(Nx.getId(), Nz.getId(), lambda);
+			return lambda;
+		}
+		
+		if(!(Nx.hasChildren() && Nz.hasChildren())){ //both nodes are terminal (It is possible to get here only is includeLeaves is true)
+			deltaMatrix.add(Nx.getId(), Nz.getId(), 1);
+			return 1;
+		}
+		
+		float prod = 1;
+		ArrayList<TreeNode> NxChildren = Nx.getChildren();
+		ArrayList<TreeNode> NzChildren = Nz.getChildren();
+		for (int i = 0; i < NxChildren.size(); i++) {
+			if(NxChildren.get(i).hasChildren() && NzChildren.get(i).hasChildren()){
 				if (Arrays.equals(NxChildren.get(i).getProduction(), NzChildren.get(i).getProduction())) {
 
-					prod *= sigma + productionBasedDeltaFunction(NxChildren.get(i),
-							NzChildren.get(i), sigma, lambda, deltaMatrix);
+					prod *= (sigma + productionBasedDeltaFunction(NxChildren.get(i),
+							NzChildren.get(i), sigma, lambda, deltaMatrix));
 				}else{
 					prod *= sigma;
 				}
+			}else if(NxChildren.get(i).hasChildren() != NzChildren.get(i).hasChildren()){
+				prod *= sigma;
 			}
-			deltaMatrix.add(Nx.getId(), Nz.getId(), lambda * prod);
-			return lambda * prod;
+			
+			
 		}
+		deltaMatrix.add(Nx.getId(), Nz.getId(), lambda * prod);
+		return lambda * prod;
+
 	}
-	
+
 	public static int compareTo(char[] s, char[] t) {
-	    int i = 0;
+		int i = 0;
 
-	    while (i < s.length && i < t.length) {
-	      char a = s[i];
-	      char b = t[i];
+		while (i < s.length && i < t.length) {
+			char a = s[i];
+			char b = t[i];
 
-	      int diff = a - b;
+			int diff = a - b;
 
-	      if (diff != 0) {
-	        return diff;
-	      }
+			if (diff != 0) {
+				return diff;
+			}
 
-	      i++;
-	    }
+			i++;
+		}
 
-	    return s.length - t.length;
-	  }
+		return s.length - t.length;
+	}
 
 }

@@ -184,6 +184,7 @@ public class SubSetTreeKernel extends DirectKernel<TreeRepresentation>{
 		// Determine the subtrees whose root have the same label. This
 		// optimization has been proposed in [Moschitti, EACL 2006].
 		ArrayList<TreeNodePairs> pairs = TreeKernelUtils.findCommonNodesByProduction(repA, repB, deltaMatrix, includeLeaves);
+
 //		if(includeLeaves){
 //			pairs = TreeKernelUtils.findCommonNodesByProduction(a, b, deltaMatrix);
 //		}else{
@@ -196,6 +197,8 @@ public class SubSetTreeKernel extends DirectKernel<TreeRepresentation>{
 
 			float deltaValue = TreeKernelUtils.productionBasedDeltaFunction(pairs.get(i).getNx(), pairs
 					.get(i).getNz(), 1, lambda, deltaMatrix);
+//			System.out.println("DELTA " + pairs.get(i).getNx().getContent().getTextFromData() + " vs "
+//					+ pairs.get(i).getNz().getContent().getTextFromData() + " = " + deltaValue);
 			sum += deltaValue;
 		}
 

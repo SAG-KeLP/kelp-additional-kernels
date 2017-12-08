@@ -198,7 +198,8 @@ public class SubTreeKernel extends DirectKernel<TreeRepresentation>{
 
 			float deltaValue = TreeKernelUtils.productionBasedDeltaFunction(pairs.get(i).getNx(), pairs
 					.get(i).getNz(), 0, lambda, deltaMatrix);
-
+//			System.out.println("DELTA " + pairs.get(i).getNx().getContent().getTextFromData() + " vs "
+//					+ pairs.get(i).getNz().getContent().getTextFromData() + " = " + deltaValue);
 			sum += deltaValue;
 		}
 
