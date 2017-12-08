@@ -324,17 +324,21 @@ public class TreeNode implements Serializable {
 	}
 	
 	/**
-	 * Returns whether this node has at least a child that is a leaf (i.e. the child is terminal)
+	 * Returns whether this has only leaf children (i.e., the child is terminal)
 	 * 
 	 * @return whether this node is preterminal
 	 */
 	public boolean isPreterminal(){
+		if(!this.hasChildren()){
+			return false;
+		}
+		
 		for(TreeNode child : this.children){
-			if(!child.hasChildren()){
-				return true;
+			if(child.hasChildren()){
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	public List<TreeNode> getLeaves(){
