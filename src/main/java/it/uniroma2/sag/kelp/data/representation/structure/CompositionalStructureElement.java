@@ -55,6 +55,13 @@ public class CompositionalStructureElement extends StructureElement {
 
 	public CompositionalStructureElement() {
 	}
+	
+	public CompositionalStructureElement(String dependencyRelation, LexicalStructureElement head,
+			LexicalStructureElement modifier) {
+		this.dependencyRelation = dependencyRelation;
+		this.head = head;
+		this.modifier = modifier;
+	}
 
 	@Override
 	public void setDataFromText(String structureElementDescription)
