@@ -151,8 +151,14 @@ public class CompositionalStructureElement extends StructureElement {
 	 * <code>dependencyRelation</code> of this element.
 	 */
 	private void updateTextFromData() {
-		this.textFromData = dependencyRelation + "<" + head.getTextFromData()
-				+ "," + modifier.getTextFromData() + ">";
+		String headLabel = cleanForCompositionalNode(head.getTextFromData());
+		String modLabel = cleanForCompositionalNode(modifier.getTextFromData());
+		this.textFromData = dependencyRelation + "<" + headLabel
+				+ "," + modLabel + ">";
+	}
+	
+	private static String cleanForCompositionalNode(String label) {
+		return label.replace(",", "_comma_").replace("<", "_oang_").replace(">", "_cang_");
 	}
 
 	/**
