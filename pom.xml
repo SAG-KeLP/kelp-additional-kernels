@@ -3,13 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.uniroma2.sag.kelp</groupId>
 	<artifactId>kelp-additional-kernels</artifactId>
-	<version>2.2.2</version>
+	<version>${kelp.version}</version>
 	<name>kelp-additional-kernels</name>
 	<url>http://www.kelp-ml.org</url>
 	<organization>
 		<name>Semantic Analytics Group @ Uniroma2</name>
 		<url>http://sag.art.uniroma2.it</url>
 	</organization>
+	<properties>
+		<kelp.version>2.2.3-SNAPSHOT</kelp.version>
+	</properties>
 	<developers>
 		<developer>
 			<id>sfilice</id>
@@ -84,7 +87,7 @@
 		<dependency>
 			<groupId>it.uniroma2.sag.kelp</groupId>
 			<artifactId>kelp-core</artifactId>
-			<version>2.2.2</version>
+			<version>${kelp.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
