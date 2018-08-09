@@ -3,16 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.uniroma2.sag.kelp</groupId>
 	<artifactId>kelp-additional-kernels</artifactId>
-	<version>${kelp.version}</version>
+	<version>2.2.3-SNAPSHOT</version>
 	<name>kelp-additional-kernels</name>
 	<url>http://www.kelp-ml.org</url>
 	<organization>
 		<name>Semantic Analytics Group @ Uniroma2</name>
 		<url>http://sag.art.uniroma2.it</url>
 	</organization>
-	<properties>
-		<kelp.version>2.2.3-SNAPSHOT</kelp.version>
-	</properties>
 	<developers>
 		<developer>
 			<id>sfilice</id>
@@ -39,6 +36,12 @@
 			<organizationUrl>http://sag.art.uniroma2.it/</organizationUrl>
 		</developer>
 	</developers>
+	<scm>
+		<url>https://github.com/SAG-KeLP/kelp-additional-kernels</url>
+		<connection>scm:git:https://github.com/SAG-KeLP/kelp-additional-kernels.git</connection>
+		<developerConnection>scm:git:https://github.com/SAG-KeLP/kelp-additional-kernels.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 	<distributionManagement>
 		<repository>
 			<id>kelp_repo_release</id>
@@ -87,7 +90,7 @@
 		<dependency>
 			<groupId>it.uniroma2.sag.kelp</groupId>
 			<artifactId>kelp-core</artifactId>
-			<version>${kelp.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -115,7 +118,6 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>2.1.1</version>
@@ -128,6 +130,14 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+				<configuration>
+					<tagNameFormat>version@{project.version}</tagNameFormat>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
